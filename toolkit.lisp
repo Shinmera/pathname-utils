@@ -6,27 +6,75 @@
 
 (in-package #:org.shirakumo.pathname-utils)
 
-(defun root-p (pathname)
-  (and (directory-p pathname)
-       (equal (pathname-directory pathname) '(:absolute))))
+(defun normalize-directory (dir)
+  (etypecase dir
+    (null NIL)
+    (string `(:absolute ,dir))
+    (cons
+     (if (member (first dir) '(:absolute :relative))
+         dir
+         #+gcl `(:relative ,dir)
+         #-gcl (error "Invalid directory component ~s" dir)))))
+
+(defun unspecific-p (component)
+  (member component '(NIL :unspecific "")))
+
+(defun pathname* (pathname)
+  (typecase pathname
+    (pathname pathname)
+    (T (let ((pathname (pathname pathname)))
+         (make-pathname
+          :directory (normalize-directory (pathname-directory pathname))
+          :defaults pathname)))))
 
 (defun relative-p (pathname)
-  (eql :relative (car (pathname-directory pathname))))
+  (let ((pathname (pathname* pathname)))
+    (and (eql :relative (car (pathname-directory pathname)))
+         pathname)))
 
 (defun absolute-p (pathname)
-  (eql :absolute (car (pathname-directory pathname))))
+  (let ((pathname (pathname* pathname)))
+    (and (eql :absolute (car (pathname-directory pathname)))
+         pathname)))
 
-(defun directory-name (pathname)
-  (let ((pathname (to-directory pathname)))
-    (car (last (rest (pathname-directory pathname))))))
+(defun logical-p (pathname)
+  (let ((pathname (pathname* pathname)))
+    (and (typep (pathname* pathname) 'logical-pathname)
+         pathname)))
+
+(defun physical-p (pathname)
+  (let ((pathname (pathname* pathname)))
+    (and (typep (pathname* pathname) '(and pathname (not logical-pathname)))
+         pathname)))
+
+(defun root-p (pathname)
+  (let ((pathname (pathname* pathname)))
+    (and (directory-p pathname)
+         (equal (pathname-directory pathname) '(:absolute))
+         pathname)))
 
 (defun directory-p (pathname)
-  (let ((pathname (pathname pathname)))
-    (and (member (pathname-name pathname) '(NIL :unspecific ""))
-         (member (pathname-type pathname) '(NIL :unspecific "")))))
+  (let ((pathname (pathname* pathname)))
+    (and (unspecific-p (pathname-name pathname))
+         (unspecific-p (pathname-type pathname))
+         pathname)))
+
+(defun file-p (pathname)
+  (let ((pathname (pathname* pathname)))
+    (and (not (directory-p pathname))
+         pathname)))
+
+(defun to-root (pathname)
+  (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute) :defaults (pathname pathname)))
+
+(defun to-physical (pathname)
+  (let ((pathname (pathname* pathname)))
+    (if (logical-p pathname)
+        (translate-logical-pathname pathname)
+        pathname)))
 
 (defun to-directory (pathname)
-  (make-pathname :name NIL :type NIL :version NIL :defaults (pathname pathname)))
+  (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))
 
 (defun subdirectory (pathname &rest subdirs)
   (loop for sub in subdirs
@@ -69,6 +117,15 @@
         (T
          (make-pathname :directory (subdirectory pathname subdir) :defaults pathname))))
 
+
+(defun subpath-p (subpath base)
+  (let ((pathname (enough-pathname subpath base)))
+    (and (relative-p pathnamne)
+         pathname)))
+
+(defun enough-pathname (subpath base)
+  (pathname* (enough-namestring subpath base)))
+
 (defun file-type (pathname)
   (let* ((type (pathname-type pathname))
          (pos (position #\. type :from-end T)))
@@ -76,3 +133,7 @@
 
 (defun file-name (pathname)
   (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname)))
+
+(defun directory-name (pathname)
+  (let ((pathname (to-directory pathname)))
+    (car (last (rest (pathname-directory pathname))))))
