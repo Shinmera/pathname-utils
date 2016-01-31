@@ -61,7 +61,8 @@
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (eql :relative (car (pathname-directory pathname)))
+    (and (or (eql :relative (car (pathname-directory pathname)))
+             (unspecific-p (pathname-directory pathname)))
          pathname)))
 
 (defun absolute-p (pathname)
