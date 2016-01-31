@@ -47,17 +47,25 @@
 
 (defun normalize-pathname (pathname)
   (let ((pathname (pathname pathname)))
-    (make-pathname
-     :directory (normalize-directory-spec (pathname-directory pathname))
-     :defaults pathname)))
-
-(defun unspecific-p (component)
-  (member component '(NIL :unspecific "")))
+    (flet ((maybe-component (coponent)
+             (let ((value (funcall component pathname)))
+               (if (unspecific-p value) NIL value))))
+      (make-pathname
+       :host (maybe-component #'pathname-host)
+       :device (maybe-component #'pathname-device)
+       :name (maybe-component #'pathname-name)
+       :type (maybe-component #'pathname-type)
+       :version (maybe-component #'pathname-version)
+       :directory (normalize-directory-spec (pathname-directory pathname))
+       :defaults pathname))))
 
 (defun pathname* (pathname)
   (typecase pathname
     (pathname pathname)
     (T (normalize-pathname pathname))))
+
+(defun unspecific-p (component)
+  (member component '(NIL :unspecific "")))
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))
@@ -102,6 +110,22 @@
     (and (relative-p pathnamne)
          pathname)))
 
+(defun pathname= (a b)
+  (let ((a (normalize-pathname a))
+        (b (normalize-pathname b)))
+    (labels ((normalize (part)
+               (if (unspecific-p part) NIL part))
+             (part= (part)
+               (equal (normalize (funcall part a))
+                      (normalize (funcall part b)))))
+      (and (part= #'pathname-name)
+           (part= #'pathname-type)
+           (part= #'pathname-host)
+           (part= #'pathname-device)
+           (part= #'pathname-version)
+           (part= #'pathname-directory)
+           T))))
+
 (defun to-root (pathname)
   (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute) :defaults (pathname pathname)))
 
@@ -121,31 +145,33 @@
         finally (return dir)))
 
 (defun pop-directory (pathname)
-  (make-pathname :directory (list* (car (pathname-directory pathname))
-                                   (butlast (cdr (pathname-directory pathname))))
-                 :defaults pathname))
+  (let ((pathname (pathname* pathname)))
+    (make-pathname :directory (list* (car (pathname-directory pathname))
+                                     (butlast (cdr (pathname-directory pathname))))
+                   :defaults pathname)))
 
 (defun parent (pathname)
-  (cond ((directory-p pathname)
-         (let ((dir (pathname-directory pathname)))
-           (if (root-p pathname)
-               pathname
-               (make-pathname
-                :directory (typecase (car (last (cdr dir)))
-                             (null (list :relative :up))
-                             (string (list* (car dir) (butlast (cdr dir))))
-                             (T (append dir '(:up))))
-                :defaults pathname))))
-        (T
-         (to-directory pathname))))
+  (let ((pathname (pathname* pathname)))
+    (cond ((directory-p pathname)
+           (let ((dir (pathname-directory pathname)))
+             (if (root-p pathname)
+                 pathname
+                 (make-pathname
+                  :directory (typecase (car (last (cdr dir)))
+                               (null (list :relative :up))
+                               (string (list* (car dir) (butlast (cdr dir))))
+                               (T (append dir '(:up))))
+                  :defaults pathname))))
+          (T
+           (to-directory pathname)))))
 
 (defun upwards (pathname)
   (cond ((directory-p pathname)
          (subdirectory (parent (parent pathname))
                        (directory-name pathname)))
         (T
-         (let ((rootpath (butlast (pathname-directory pathname))))
-           (make-pathname :directory rootpath :defaults pathname)))))
+         (make-pathname :directory (pathname-directory (parent pathname))
+                        :defaults pathname))))
 
 (defun downwards (pathname subdir)
   (cond ((directory-p pathname)
@@ -153,38 +179,30 @@
                        subdir
                        (directory-name pathname)))
         (T
-         (make-pathname :directory (subdirectory pathname subdir) :defaults pathname))))
+         (make-pathname :directory (subdirectory pathname subdir)
+                        :defaults pathname))))
 
 (defun enough-pathname (subpath base)
   (pathname* (enough-namestring subpath base)))
 
 (defun file-type (pathname)
-  (let* ((type (pathname-type pathname))
-         (pos (position #\. type :from-end T)))
-    (if pos (subseq type (1+ pos)) type)))
+  (let ((pathname (pathname pathname)))
+    (let ((type (pathname-type pathname))
+          (name (pathname-name pathname)))
+      (cond ((unspecific-p type)
+             (let ((pos (position #\. name :from-end T)))
+               (if pos (subseq name (1+ pos)) NIL)))
+            (T
+             (let ((pos (position #\. type :from-end T)))
+               (if pos (subseq type (1+ pos)) type)))))))
 
 (defun file-name (pathname)
-  (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname)))
+  (let ((pathname (pathname pathname)))
+    (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname))))
 
 (defun directory-name (pathname)
   (let ((pathname (to-directory pathname)))
     (car (last (rest (pathname-directory pathname))))))
-
-(defun pathname-equal (a b)
-  (let ((a (normalize-pathname a))
-        (b (normalize-pathname b)))
-    (labels ((normalize (part)
-               (if (unspecific-p part) NIL part))
-             (part= (part)
-               (equal (normalize (funcall part a))
-                      (normalize (funcall part b)))))
-      (and (part= #'pathname-name)
-           (part= #'pathname-type)
-           (part= #'pathname-host)
-           (part= #'pathname-device)
-           (part= #'pathname-version)
-           (part= #'pathname-directory)
-           T))))
 
 (defun directory-separator (&optional (pathname *default-pathname-defaults*))
   (let ((name (namestring (make-pathname :directory '(:absolute "nowhere") :defaults pathname))))
