@@ -140,7 +140,7 @@ ENOUGH-PATHNAME.
 See ENOUGH-PATHNAME")
  
  (pathname=
-  "Returns T if the two pathnames are equal.
+  "Returns T if the two pathnames are the same.
 
 Note that this comparison is purely based on the pathnames itself
 and does not check whether the two might resolve to the same file
@@ -154,6 +154,22 @@ treating parts that are UNSPECIFIC-P as the same, irregardless
 of the way in which they might be unspecific.
 
 See UNSPECIFIC-P")
+
+ (pathname-equal
+  "Returns T if the two pathnames denote the same file.
+
+Note that this comparison has to access the file system and might
+therefore be costly.
+
+First the two pathnames are turned into truenames using TRUENAME
+and then compared using PATHNAME=. This should result in a
+comparison that returns true in any situation where the two
+pathnames really do refer to the same file, but might not look
+the same due to symbolic links or similar effects in the file
+system.
+
+See CL:TRUENAME
+See PATHNAME=")
  
  (to-root
   "Returns the absolute root of the pathname.")

@@ -126,6 +126,9 @@
            (part= #'pathname-directory)
            T))))
 
+(defun pathname-equal (a b)
+  (pathname= (truename a) (truename b)))
+
 (defun to-root (pathname)
   (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute) :defaults (pathname pathname)))
 

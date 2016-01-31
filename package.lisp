@@ -28,6 +28,7 @@
    #:file-p
    #:subpath-p
    #:pathname=
+   #:pathname-equal
    #:to-root
    #:to-physical
    #:to-directory
