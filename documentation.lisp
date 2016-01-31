@@ -24,3 +24,236 @@
              collect (destructuring-bind (var &optional (type 'function))
                          (if (listp var) var (list var))
                        `(setf (documentation ',var ',type) ,doc)))))
+
+(setdocs
+ ((*wild-component* variable)
+  "The proper value to use for a wild pathname component.")
+ 
+ ((*wild-file* variable)
+  "A pathname that is wild in its file spec (can match any file).")
+ 
+ ((*wild-directory* variable)
+  "A pathname that is wild in its directory spec (can match any directory).")
+ 
+ ((*wild-inferiors* variable)
+  "A pathname that has wild inferiors (can match any number of subdirectories).")
+ 
+ ((*wild-path* variable)
+  "A pathname that is wild in both its file and its directory.")
+ 
+ (clean-directory-spec
+  "Removes superfluous components from the directory spec.
+
+Specifically, if the encountered part is UNSPECIFIC or the
+string \".\", it is omitted. If the part is :BACK, the
+preceding component is omitted if possible. If not possible,
+an equivalent amount of :UP specs are inserted instead.")
+ 
+ (normalize-directory-spec
+  "Attempts to normalize the directory specification into one as specified by CLHS.
+
+Also cleans the directory spec.
+
+See CLEAN-DIRECTORY-SPEC.")
+ 
+ (normalize-pathname
+  "Returns a normalised form of the given pathname.
+
+More specifically, the given object is ensured to be a pathname
+using CL:PATHNAME, then turned into a new pathname with the
+following properties: an unspecific component is turned into
+NIL and the directory component is normalised through
+NORMALIZE-DIRECTORY-SPEC.
+
+See UNSPECIFIC-P
+See NORMALIZE-DIRECTORY-SPEC")
+ 
+ (pathname*
+  "Ensures that the argument is a pathname.
+
+If a pathname is passed, it is returned verbatim.
+If it is anything else, the value is coerced to a pathname using
+NORMALIZE-PATHNAME.
+
+See NORMALIZE-PATHNAME")
+ 
+ (unspecific-p
+  "Returns true if the given component is unspecific.
+
+This includes :UNSPECIFIC, NIL, and the empty string.")
+ 
+ (relative-p
+  "Returns the pathname if it is a relative pathname.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (absolute-p
+  "Returns the pathname if it is an absolute pathname.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (logical-p
+  "Returns the pathname if it is a logical pathname.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (physical-p
+  "Returns the pathname if it is a physical pathname.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (root-p
+  "Returns the pathname if it denotes an absolute root directory.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (directory-p
+  "Returns the pathname if it denotes a directory (not a file).
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (file-p
+  "Returns the pathname if it denotes a file (not a directory).
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (subpath-p
+  "Returns true if SUBPATH is indeed a path underneath BASE.
+
+The actually returned value is the coerced value of SUBPATH by
+ENOUGH-PATHNAME.
+
+See ENOUGH-PATHNAME")
+ 
+ (pathname=
+  "Returns T if the two pathnames are equal.
+
+Note that this comparison is purely based on the pathnames itself
+and does not check whether the two might resolve to the same file
+on the system.
+
+Relative pathnames are turned into absolute ones by merging them
+with *default-pathname-defaults* before being compared.
+
+Each component of the pathnames are compared using EQUAL, but
+treating parts that are UNSPECIFIC-P as the same, irregardless
+of the way in which they might be unspecific.
+
+See UNSPECIFIC-P")
+ 
+ (to-root
+  "Returns the absolute root of the pathname.")
+ 
+ (to-physical
+  "Turns the pathname into a physical one if it is not already one.
+
+The pathname is coerced using PATHNAME*
+
+See LOGICAL-P
+See CL:TRANSLATE-LOGICAL-PATHNAME
+See PATHNAME*")
+ 
+ (to-directory
+  "Turns the pathname into a pathname-directory if it is not already one.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (subdirectory
+  "Returns a directory-pathname with the given subdirectories appended.
+
+For example, appending \"bar\" and \"baz\" to \"foo/\" will
+result in \"foo/bar/baz\".
+
+Each of the arguments to this function is coerced to a
+directory-pathname using TO-DIRECTORY.
+
+See TO-DIRECTORY")
+ 
+ (pop-directory
+  "Pops the last component off the pathname-directory part.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (parent
+  "Returns the parent of the pathname.
+
+If the pathname is a directory-pathname, it returns a pathname
+that points to the parent thereof, if possible. Specifically,
+if the directory is relative and empty, :up is inserted. If
+it is absolute and empty, the same pathname is returned. If
+it is not empty, then the last component of the directory is
+removed. If the pathname is a file pathname, this is equivalent
+to TO-DIRECTORY.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*
+See TO-DIRECTORY")
+ 
+ (upwards
+  "Moves the topmost pathname component a level upwards.
+
+Specifically, if we have a file \"foo/bar/baz.jpg\", and move
+it upwards by one, the resulting pathname will be 
+\"foo/baz.jpg\". If the pathname is a directory-pathname then
+the last directory is moved upwards by one.
+
+See PARENT")
+ 
+ (downwards
+  "Moves the topmost pathname component a level downwards.
+
+Specifically, if we have a file \"foo/bar.jpg\", and move it
+downwards by \"baz\", the resulting pathname will be
+\"foo/baz/bar.jpg\". If the pathname is a directory-pathname
+then the last directory is moved downwards by one.
+
+See SUBDIRECTORY")
+ 
+ (enough-pathname
+  "Like ENOUGH-NAMESTRING but returns an actual pathname.
+
+The pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+ 
+ (file-type
+  "Returns the actual file type.
+
+This is different from PATHNAME-TYPE in the following manner:
+If PATHNAME-TYPE is specific, but contains a dot, only the part
+after the dot is used as it would indicate the actual file-type
+on any recent system. If PATHNAME-TYPE is unspecific, the
+PATHNAME-NAME is specific, and it contains a dot, then that last
+part is used instead. Otherwise NIL is returned.")
+ 
+ (file-name
+  "Returns the complete file name as it would be used by the OS.")
+ 
+ (directory-name
+  "Returns the name of the topmost directory in the pathname, if any.
+
+The pathname is coerced using TO-DIRECTORY
+
+See TO-DIRECTORY")
+ 
+ (directory-separator
+  "Returns the namestring separator between directories."))
