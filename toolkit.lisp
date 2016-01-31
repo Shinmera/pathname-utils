@@ -6,6 +6,17 @@
 
 (in-package #:org.shirakumo.pathname-utils)
 
+(defvar *wild-component* #+cormanlisp "*" #-cormanlisp :wild)
+(defvar *wild-file* (make-pathname :directory NIL
+                                   :name *wild-component*
+                                   :type *wild-component*
+                                   :version (and #-(or allegro abcl xcl) *wild-component*)))
+(defvar *wild-directory* (make-pathname :directory `(:relative :wild)
+                                        :name NIL :type NIL :version NIL))
+(defvar *wild-inferiors* (make-pathname :directory '(:relative :wild-inferiors)
+                                        :name NIL :type NIL :version NIL))
+(defvar *wild-path* (merge-pathnames *wild-file* *wild-directory*))
+
 (defun clean-directory-spec (dir)
   (when dir
     (let ((parts ()))
