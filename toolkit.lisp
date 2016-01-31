@@ -6,15 +6,39 @@
 
 (in-package #:org.shirakumo.pathname-utils)
 
-(defun normalize-directory (dir)
-  (etypecase dir
-    (null NIL)
-    (string `(:absolute ,dir))
-    (cons
-     (if (member (first dir) '(:absolute :relative))
-         dir
-         #+gcl `(:relative ,dir)
-         #-gcl (error "Invalid directory component ~s" dir)))))
+(defun clean-directory-spec (dir)
+  (when dir
+    (let ((parts ()))
+      (loop with back = 0
+            for el in (reverse dir)
+            until (find el '(:absolute :relative :home))
+            do (cond 
+                 ((unspecific-p el))
+                 ((equal el "."))
+                 ((eql el :back) (incf back))
+                 ((< 0 back) (decf back))
+                 (T (push el parts)))
+            finally (case el
+                      (:home (loop repeat back do (push :up parts)) (push :home parts))
+                      (:relative (loop repeat back do (push :up parts)))))
+      (list* (car dir) parts))))
+
+(defun normalize-directory-spec (dir)
+  (clean-directory-spec
+   (etypecase dir
+     (null NIL)
+     (string `(:absolute ,dir))
+     (cons
+      (if (member (first dir) '(:absolute :relative))
+          dir
+          #+gcl `(:relative ,dir)
+          #-gcl (error "Invalid directory component ~s" dir))))))
+
+(defun normalize-pathname (pathname)
+  (let ((pathname (pathname pathname)))
+    (make-pathname
+     :directory (normalize-directory-spec (pathname-directory pathname))
+     :defaults pathname)))
 
 (defun unspecific-p (component)
   (member component '(NIL :unspecific "")))
@@ -22,10 +46,7 @@
 (defun pathname* (pathname)
   (typecase pathname
     (pathname pathname)
-    (T (let ((pathname (pathname pathname)))
-         (make-pathname
-          :directory (normalize-directory (pathname-directory pathname))
-          :defaults pathname)))))
+    (T (normalize-pathname pathname))))
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))
@@ -62,6 +83,11 @@
 (defun file-p (pathname)
   (let ((pathname (pathname* pathname)))
     (and (not (directory-p pathname))
+         pathname)))
+
+(defun subpath-p (subpath base)
+  (let ((pathname (enough-pathname subpath base)))
+    (and (relative-p pathnamne)
          pathname)))
 
 (defun to-root (pathname)
@@ -117,12 +143,6 @@
         (T
          (make-pathname :directory (subdirectory pathname subdir) :defaults pathname))))
 
-
-(defun subpath-p (subpath base)
-  (let ((pathname (enough-pathname subpath base)))
-    (and (relative-p pathnamne)
-         pathname)))
-
 (defun enough-pathname (subpath base)
   (pathname* (enough-namestring subpath base)))
 
@@ -137,3 +157,23 @@
 (defun directory-name (pathname)
   (let ((pathname (to-directory pathname)))
     (car (last (rest (pathname-directory pathname))))))
+
+(defun pathname-equal (a b)
+  (let ((a (normalize-pathname a))
+        (b (normalize-pathname b)))
+    (labels ((normalize (part)
+               (if (unspecific-p part) NIL part))
+             (part= (part)
+               (equal (normalize (funcall part a))
+                      (normalize (funcall part b)))))
+      (and (part= #'pathname-name)
+           (part= #'pathname-type)
+           (part= #'pathname-host)
+           (part= #'pathname-device)
+           (part= #'pathname-version)
+           (part= #'pathname-directory)
+           T))))
+
+(defun directory-separator (&optional (pathname *default-pathname-defaults*))
+  (let ((name (namestring (make-pathname :directory '(:absolute "nowhere") :defaults pathname))))
+    (char name (1- (length name)))))
