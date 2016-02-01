@@ -186,7 +186,11 @@ See PATHNAME*")
  (to-directory
   "Turns the pathname into a pathname-directory if it is not already one.
 
-The pathname is coerced using PATHNAME*
+If the argument is :UP or :BACK, it is turned into a relative
+pathname with the argument as its only pathname-directory-component.
+If the argument is :HOME, it is turned into an absolute pathname
+pointing to the home directory. Otherwise the pathname is coerced
+using PATHNAME*
 
 See PATHNAME*")
  
@@ -196,8 +200,10 @@ See PATHNAME*")
 For example, appending \"bar\" and \"baz\" to \"foo/\" will
 result in \"foo/bar/baz\".
 
-Each of the arguments to this function is coerced to a
-directory-pathname using TO-DIRECTORY.
+The PATHNAME is coerced using TO-DIRECTORY. For any of the
+subdirs, if it is a pathname, stream, or keyword, it is coerced
+to a pathname using TO-DIRECTORY. If it is a string, it is
+coerced using TO-DIRECTORY but with a trailing slash appended.
 
 See TO-DIRECTORY")
  
