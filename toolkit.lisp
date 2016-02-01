@@ -47,7 +47,7 @@
 
 (defun normalize-pathname (pathname)
   (let ((pathname (pathname pathname)))
-    (flet ((maybe-component (coponent)
+    (flet ((maybe-component (component)
              (let ((value (funcall component pathname)))
                (if (unspecific-p value) NIL value))))
       (make-pathname
@@ -139,12 +139,18 @@
         pathname)))
 
 (defun to-directory (pathname)
-  (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))
+  (ecase pathname
+    ((:up :back) (make-pathname :name NIL :type NIL :version NIL :directory `(:relative ,pathname)))
+    ((:home) (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute :home)))
+    (T (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))))
 
 (defun subdirectory (pathname &rest subdirs)
   (loop for sub in subdirs
-        for dir = (merge-pathnames (to-directory sub) (to-directory pathname))
-        then (merge-pathnames (to-directory sub) dir)
+        for subpath = (etypecase sub
+                        ((or pathname keyword stream) (to-directory sub))
+                        (string (to-directory (concatenate 'string sub "/"))))
+        for dir = (merge-pathnames subpath (to-directory pathname))
+        then (merge-pathnames subpath dir)
         finally (return dir)))
 
 (defun pop-directory (pathname)
