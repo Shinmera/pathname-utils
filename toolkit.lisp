@@ -107,7 +107,7 @@
 
 (defun subpath-p (subpath base)
   (let ((pathname (enough-pathname subpath base)))
-    (and (relative-p pathnamne)
+    (and (relative-p pathname)
          pathname)))
 
 (defun pathname= (a b)
