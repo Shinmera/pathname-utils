@@ -189,7 +189,7 @@
                        subdir
                        (directory-name pathname)))
         (T
-         (make-pathname :directory (subdirectory pathname subdir)
+         (make-pathname :directory (pathname-directory (subdirectory pathname subdir))
                         :defaults pathname))))
 
 (defun enough-pathname (subpath base)
