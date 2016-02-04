@@ -189,8 +189,9 @@ See PATHNAME*")
 If the argument is :UP or :BACK, it is turned into a relative
 pathname with the argument as its only pathname-directory-component.
 If the argument is :HOME, it is turned into an absolute pathname
-pointing to the home directory. Otherwise the pathname is coerced
-using PATHNAME*
+pointing to the home directory. 
+If the argument is NIL, it is turned into an empty relative pathname.
+Otherwise the pathname is coerced using PATHNAME*
 
 See PATHNAME*")
  

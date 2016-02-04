@@ -142,6 +142,7 @@
   (case pathname
     ((:up :back) (make-pathname :name NIL :type NIL :version NIL :directory `(:relative ,pathname)))
     ((:home) (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute :home)))
+    ((NIL) (make-pathname :directory '(:relative)))
     (T (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))))
 
 (defun subdirectory (pathname &rest subdirs)
