@@ -139,7 +139,7 @@
         pathname)))
 
 (defun to-directory (pathname)
-  (ecase pathname
+  (case pathname
     ((:up :back) (make-pathname :name NIL :type NIL :version NIL :directory `(:relative ,pathname)))
     ((:home) (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute :home)))
     (T (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))))
