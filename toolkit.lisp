@@ -207,7 +207,7 @@
           (final-dir (list :relative)))
       (loop for a = (car from-dir)
             for b = (car to-dir)
-            while (equal a b)
+            while (and from-dir to-dir (equal a b))
             do (pop from-dir) (pop to-dir))
       (loop repeat (length from-dir)
             do (push :up final-dir))
