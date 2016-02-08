@@ -38,6 +38,7 @@
    #:upwards
    #:downwards
    #:enough-pathname
+   #:relative-pathname
    #:file-type
    #:file-name
    #:directory-name
