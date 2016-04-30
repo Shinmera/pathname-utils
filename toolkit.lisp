@@ -184,7 +184,8 @@
          (subdirectory (parent (parent pathname))
                        (directory-name pathname)))
         (T
-         (make-pathname :directory (pathname-directory (parent pathname))
+         (make-pathname :directory (pathname-directory
+                                    (parent (to-directory pathname)))
                         :defaults pathname))))
 
 (defun downwards (pathname subdir)
