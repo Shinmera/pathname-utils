@@ -145,6 +145,10 @@
     ((NIL) (make-pathname :directory '(:relative)))
     (T (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))))
 
+(defun to-file (pathname)
+  (make-pathname :directory NIL :device NIL :host NIL
+                 :defaults (pathname* pathname)))
+
 (defun subdirectory (pathname &rest subdirs)
   (loop for sub in subdirs
         for subpath = (etypecase sub

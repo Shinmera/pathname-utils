@@ -194,6 +194,14 @@ If the argument is NIL, it is turned into an empty relative pathname.
 Otherwise the pathname is coerced using PATHNAME*
 
 See PATHNAME*")
+
+  (to-file
+   "Turns the pathname into a file pathname.
+
+This means stripping the device, host, and directory components
+of the pathname. The given pathname is coerced using PATHNAME*
+
+See PATHNAME*")
   
   (subdirectory
    "Returns a directory-pathname with the given subdirectories appended.

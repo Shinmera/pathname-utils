@@ -32,6 +32,7 @@
    #:to-root
    #:to-physical
    #:to-directory
+   #:to-file
    #:subdirectory
    #:pop-directory
    #:parent
