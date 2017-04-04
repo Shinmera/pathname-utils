@@ -6,38 +6,41 @@
           font-size: 14pt;
           padding: 5px;
       }
-
       body>header{
           display:flex;
           align-items: center;
           justify-content: center;
           flex-direction: column;
           max-width: 100%;
+          text-align: center;
       }
-
+      body>header img{
+          max-width: 50%;
+      }
       img{
           max-width: 100%;
           max-height: 100%;
       }
-
       code{
           font-family: Consolas, Inconsolata, monospace;
       }
-
       a{
           text-decoration: none;
           color: #0055AA;
       }
-
+      a img{
+          border: none;
+      }
       #documentation{
           text-align: justify;
       }
-
       #documentation pre{
           margin-left: 20px;
           overflow: auto;
       }
-
+      #documentation img{
+          margin: 5px;
+      }
       #symbol-index>ul{
           list-style: none;
           padding: 0;
@@ -68,57 +71,56 @@
           white-space: pre-wrap;
           font-size: 12pt;
       }
-
       @media (max-width: 800px){
           body{font-size: 12pt;}
-      } </style> </head> <body> <header> <h1>pathname-utils</h1> <span class="version">1.0.0</span> <p class="description">A collection of utilities for pathname manipulation.</p> </header> <main> <article id="documentation">  <div><h2>About Pathname-Utils</h2> <p>This is a collection of common tests and operations to help handling pathnames. It does not actually deal in handling the accessing of files on the underlying system however.</p> <h2>How To</h2> <p>Since this is a purely utility/toolkit library, simply having a look at the symbol index should give you the best idea of what is offered.</p> </div>  </article> <article id="copyright">  <h2>Copyright</h2> <span>pathname-utils</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.  © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span> .  This library can be obtained on <a href="https://github.com/Shinmera/pathname-utils">https://github.com/Shinmera/pathname-utils</a>.  </article>  <article id="symbol-index"> <h2>Package Index</h2> <ul><li class="package"> <h3> <a name="PATHNAME-UTILS" href="#PATHNAME-UTILS">PATHNAME-UTILS</a> <span class="nicknames">(ORG.SHIRAKUMO.PATHNAME-UTILS)</span> </h3> <ul><li> <a name="PATHNAME-UTILS:*WILD-COMPONENT*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-COMPONENT*">*WILD-COMPONENT*</a></code></h4>  </header> <pre class="docstring">The proper value to use for a wild pathname component.</pre> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-DIRECTORY*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-DIRECTORY*">*WILD-DIRECTORY*</a></code></h4>  </header> <pre class="docstring">A pathname that is wild in its directory spec (can match any directory).</pre> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-FILE*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-FILE*">*WILD-FILE*</a></code></h4>  </header> <pre class="docstring">A pathname that is wild in its file spec (can match any file).</pre> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-INFERIORS*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-INFERIORS*">*WILD-INFERIORS*</a></code></h4>  </header> <pre class="docstring">A pathname that has wild inferiors (can match any number of subdirectories).</pre> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-PATH*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-PATH*">*WILD-PATH*</a></code></h4>  </header> <pre class="docstring">A pathname that is wild in both its file and its directory.</pre> </article> </li><li> <a name="PATHNAME-UTILS:ABSOLUTE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ABSOLUTE-P">ABSOLUTE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it is an absolute pathname.
+      } </style> </head> <body> <header> <h1>pathname-utils</h1> <span class="version">1.0.0</span> <p class="description">A collection of utilities for pathname manipulation.</p> </header> <main> <article id="documentation">  <div><h2>About Pathname-Utils</h2> <p>This is a collection of common tests and operations to help handling pathnames. It does not actually deal in handling the accessing of files on the underlying system however.</p> <h2>How To</h2> <p>Since this is a purely utility/toolkit library, simply having a look at the symbol index should give you the best idea of what is offered.</p> </div>  </article> <article id="copyright">  <h2>Copyright</h2> <span>pathname-utils</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.  © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span> .  This library can be obtained on <a href="https://github.com/Shinmera/pathname-utils">https://github.com/Shinmera/pathname-utils</a>.  </article>  <article id="symbol-index"> <h2>Package Index</h2> <ul><li class="package"> <h3> <a name="PATHNAME-UTILS" href="#PATHNAME-UTILS">PATHNAME-UTILS</a> <span class="nicknames">(ORG.SHIRAKUMO.PATHNAME-UTILS)</span> </h3> <ul><li> <a name="PATHNAME-UTILS:*WILD-COMPONENT*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-COMPONENT*">*WILD-COMPONENT*</a></code></h4>  </header> <div class="docstring"><pre>The proper value to use for a wild pathname component.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-DIRECTORY*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-DIRECTORY*">*WILD-DIRECTORY*</a></code></h4>  </header> <div class="docstring"><pre>A pathname that is wild in its directory spec (can match any directory).</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-FILE*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-FILE*">*WILD-FILE*</a></code></h4>  </header> <div class="docstring"><pre>A pathname that is wild in its file spec (can match any file).</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-INFERIORS*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-INFERIORS*">*WILD-INFERIORS*</a></code></h4>  </header> <div class="docstring"><pre>A pathname that has wild inferiors (can match any number of subdirectories).</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:*WILD-PATH*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#PATHNAME-UTILS:*WILD-PATH*">*WILD-PATH*</a></code></h4>  </header> <div class="docstring"><pre>A pathname that is wild in both its file and its directory.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:ABSOLUTE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ABSOLUTE-P">ABSOLUTE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it is an absolute pathname.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:CLEAN-DIRECTORY-SPEC"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:CLEAN-DIRECTORY-SPEC">CLEAN-DIRECTORY-SPEC</a></code></h4> <code class="qualifiers"></code> <code class="arguments">DIR</code><code>)</code>  </header> <pre class="docstring">Removes superfluous components from the directory spec.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:CLEAN-DIRECTORY-SPEC"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:CLEAN-DIRECTORY-SPEC">CLEAN-DIRECTORY-SPEC</a></code></h4> <code class="qualifiers"></code> <code class="arguments">DIR</code><code>)</code>  </header> <div class="docstring"><pre>Removes superfluous components from the directory spec.
 
 Specifically, if the encountered part is UNSPECIFIC or the
 string &quot;.&quot;, it is omitted. If the part is :BACK, the
 preceding component is omitted if possible. If not possible,
-an equivalent amount of :UP specs are inserted instead.</pre> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-NAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-NAME">DIRECTORY-NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the name of the topmost directory in the pathname, if any.
+an equivalent amount of :UP specs are inserted instead.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-NAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-NAME">DIRECTORY-NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the name of the topmost directory in the pathname, if any.
 
 The pathname is coerced using TO-DIRECTORY
 
-See TO-DIRECTORY</pre> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-P">DIRECTORY-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it denotes a directory (not a file).
+See <a href="#PATHNAME-UTILS:TO-DIRECTORY">TO-DIRECTORY</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-P">DIRECTORY-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it denotes a directory (not a file).
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-SEPARATOR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-SEPARATOR">DIRECTORY-SEPARATOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;OPTIONAL (PATHNAME *DEFAULT-PATHNAME-DEFAULTS*)</code><code>)</code>  </header> <pre class="docstring">Returns the namestring separator between directories.</pre> </article> </li><li> <a name="PATHNAME-UTILS:DOWNWARDS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DOWNWARDS">DOWNWARDS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME SUBDIR</code><code>)</code>  </header> <pre class="docstring">Moves the topmost pathname component a level downwards.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:DIRECTORY-SEPARATOR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DIRECTORY-SEPARATOR">DIRECTORY-SEPARATOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;OPTIONAL (PATHNAME *DEFAULT-PATHNAME-DEFAULTS*)</code><code>)</code>  </header> <div class="docstring"><pre>Returns the namestring separator between directories.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:DOWNWARDS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:DOWNWARDS">DOWNWARDS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME SUBDIR</code><code>)</code>  </header> <div class="docstring"><pre>Moves the topmost pathname component a level downwards.
 
 Specifically, if we have a file &quot;foo/bar.jpg&quot;, and move it
 downwards by &quot;baz&quot;, the resulting pathname will be
 &quot;foo/baz/bar.jpg&quot;. If the pathname is a directory-pathname
 then the last directory is moved downwards by one.
 
-See SUBDIRECTORY</pre> </article> </li><li> <a name="PATHNAME-UTILS:ENOUGH-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ENOUGH-PATHNAME">ENOUGH-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SUBPATH BASE</code><code>)</code>  </header> <pre class="docstring">Like ENOUGH-NAMESTRING but returns an actual pathname.
+See <a href="#PATHNAME-UTILS:SUBDIRECTORY">SUBDIRECTORY</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:ENOUGH-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ENOUGH-PATHNAME">ENOUGH-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SUBPATH BASE</code><code>)</code>  </header> <div class="docstring"><pre>Like ENOUGH-NAMESTRING but returns an actual pathname.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:FILE-NAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-NAME">FILE-NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the complete file name as it would be used by the OS.</pre> </article> </li><li> <a name="PATHNAME-UTILS:FILE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-P">FILE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it denotes a file (not a directory).
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:FILE-NAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-NAME">FILE-NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the complete file name as it would be used by the OS.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:FILE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-P">FILE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it denotes a file (not a directory).
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:FILE-TYPE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-TYPE">FILE-TYPE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the actual file type.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:FILE-TYPE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:FILE-TYPE">FILE-TYPE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the actual file type.
 
 This is different from PATHNAME-TYPE in the following manner:
 If PATHNAME-TYPE is specific, but contains a dot, only the part
 after the dot is used as it would indicate the actual file-type
 on any recent system. If PATHNAME-TYPE is unspecific, the
 PATHNAME-NAME is specific, and it contains a dot, then that last
-part is used instead. Otherwise NIL is returned.</pre> </article> </li><li> <a name="PATHNAME-UTILS:LOGICAL-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:LOGICAL-P">LOGICAL-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it is a logical pathname.
+part is used instead. Otherwise NIL is returned.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:LOGICAL-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:LOGICAL-P">LOGICAL-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it is a logical pathname.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:NORMALIZE-DIRECTORY-SPEC"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:NORMALIZE-DIRECTORY-SPEC">NORMALIZE-DIRECTORY-SPEC</a></code></h4> <code class="qualifiers"></code> <code class="arguments">DIR</code><code>)</code>  </header> <pre class="docstring">Attempts to normalize the directory specification into one as specified by CLHS.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:NORMALIZE-DIRECTORY-SPEC"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:NORMALIZE-DIRECTORY-SPEC">NORMALIZE-DIRECTORY-SPEC</a></code></h4> <code class="qualifiers"></code> <code class="arguments">DIR</code><code>)</code>  </header> <div class="docstring"><pre>Attempts to normalize the directory specification into one as specified by CLHS.
 
 Also cleans the directory spec.
 
-See CLEAN-DIRECTORY-SPEC.</pre> </article> </li><li> <a name="PATHNAME-UTILS:NORMALIZE-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:NORMALIZE-PATHNAME">NORMALIZE-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns a normalised form of the given pathname.
+See <a href="NIL">CLEAN-DIRECTORY-SPEC.</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:NORMALIZE-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:NORMALIZE-PATHNAME">NORMALIZE-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns a normalised form of the given pathname.
 
 More specifically, the given object is ensured to be a pathname
 using CL:PATHNAME, then turned into a new pathname with the
@@ -126,8 +128,8 @@ following properties: an unspecific component is turned into
 NIL and the directory component is normalised through
 NORMALIZE-DIRECTORY-SPEC.
 
-See UNSPECIFIC-P
-See NORMALIZE-DIRECTORY-SPEC</pre> </article> </li><li> <a name="PATHNAME-UTILS:PARENT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PARENT">PARENT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the parent of the pathname.
+See <a href="#PATHNAME-UTILS:UNSPECIFIC-P">UNSPECIFIC-P</a>
+See <a href="#PATHNAME-UTILS:NORMALIZE-DIRECTORY-SPEC">NORMALIZE-DIRECTORY-SPEC</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PARENT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PARENT">PARENT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the parent of the pathname.
 
 If the pathname is a directory-pathname, it returns a pathname
 that points to the parent thereof, if possible. Specifically,
@@ -139,14 +141,14 @@ to TO-DIRECTORY.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*
-See TO-DIRECTORY</pre> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME*"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Ensures that the argument is a pathname.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a>
+See <a href="#PATHNAME-UTILS:TO-DIRECTORY">TO-DIRECTORY</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME*"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Ensures that the argument is a pathname.
 
 If a pathname is passed, it is returned verbatim.
 If it is anything else, the value is coerced to a pathname using
 NORMALIZE-PATHNAME.
 
-See NORMALIZE-PATHNAME</pre> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME-EQUAL"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME-EQUAL">PATHNAME-EQUAL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B</code><code>)</code>  </header> <pre class="docstring">Returns T if the two pathnames denote the same file.
+See <a href="#PATHNAME-UTILS:NORMALIZE-PATHNAME">NORMALIZE-PATHNAME</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME-EQUAL"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME-EQUAL">PATHNAME-EQUAL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B</code><code>)</code>  </header> <div class="docstring"><pre>Returns T if the two pathnames denote the same file.
 
 Note that this comparison has to access the file system and might
 therefore be costly.
@@ -158,8 +160,8 @@ pathnames really do refer to the same file, but might not look
 the same due to symbolic links or similar effects in the file
 system.
 
-See CL:TRUENAME
-See PATHNAME=</pre> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME="> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B</code><code>)</code>  </header> <pre class="docstring">Returns T if the two pathnames are the same.
+See <a href="http://l1sp.org/cl/truename">CL:TRUENAME</a>
+See <a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME="> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B</code><code>)</code>  </header> <div class="docstring"><pre>Returns T if the two pathnames are the same.
 
 Note that this comparison is purely based on the pathnames itself
 and does not check whether the two might resolve to the same file
@@ -172,19 +174,19 @@ Each component of the pathnames are compared using EQUAL, but
 treating parts that are UNSPECIFIC-P as the same, irregardless
 of the way in which they might be unspecific.
 
-See UNSPECIFIC-P</pre> </article> </li><li> <a name="PATHNAME-UTILS:PHYSICAL-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PHYSICAL-P">PHYSICAL-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it is a physical pathname.
+See <a href="#PATHNAME-UTILS:UNSPECIFIC-P">UNSPECIFIC-P</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PHYSICAL-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PHYSICAL-P">PHYSICAL-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it is a physical pathname.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:POP-DIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:POP-DIRECTORY">POP-DIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Pops the last component off the pathname-directory part.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:POP-DIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:POP-DIRECTORY">POP-DIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Pops the last component off the pathname-directory part.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:RELATIVE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:RELATIVE-P">RELATIVE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it is a relative pathname.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:RELATIVE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:RELATIVE-P">RELATIVE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it is a relative pathname.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:RELATIVE-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:RELATIVE-PATHNAME">RELATIVE-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FROM TO</code><code>)</code>  </header> <pre class="docstring">Computes a relative pathname from one place to another.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:RELATIVE-PATHNAME"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:RELATIVE-PATHNAME">RELATIVE-PATHNAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FROM TO</code><code>)</code>  </header> <div class="docstring"><pre>Computes a relative pathname from one place to another.
 
 The pathnames are first turned into absolute ones by 
 MERGE-PATHNAMES. Then, the common directory components are
@@ -200,11 +202,11 @@ signalled instead.
 The pathnames are coerced using NORMALIZE-PATHNAME after the
 merge.
 
-See NORMALIZE-PATHNAME</pre> </article> </li><li> <a name="PATHNAME-UTILS:ROOT-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ROOT-P">ROOT-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the pathname if it denotes an absolute root directory.
+See <a href="#PATHNAME-UTILS:NORMALIZE-PATHNAME">NORMALIZE-PATHNAME</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:ROOT-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:ROOT-P">ROOT-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it denotes an absolute root directory.
 
 The pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:SUBDIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:SUBDIRECTORY">SUBDIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME &amp;REST SUBDIRS</code><code>)</code>  </header> <pre class="docstring">Returns a directory-pathname with the given subdirectories appended.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:SUBDIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:SUBDIRECTORY">SUBDIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME &amp;REST SUBDIRS</code><code>)</code>  </header> <div class="docstring"><pre>Returns a directory-pathname with the given subdirectories appended.
 
 For example, appending &quot;bar&quot; and &quot;baz&quot; to &quot;foo/&quot; will
 result in &quot;foo/bar/baz&quot;.
@@ -214,12 +216,12 @@ subdirs, if it is a pathname, stream, or keyword, it is coerced
 to a pathname using TO-DIRECTORY. If it is a string, it is
 coerced using TO-DIRECTORY but with a trailing slash appended.
 
-See TO-DIRECTORY</pre> </article> </li><li> <a name="PATHNAME-UTILS:SUBPATH-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:SUBPATH-P">SUBPATH-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SUBPATH BASE</code><code>)</code>  </header> <pre class="docstring">Returns true if SUBPATH is indeed a path underneath BASE.
+See <a href="#PATHNAME-UTILS:TO-DIRECTORY">TO-DIRECTORY</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:SUBPATH-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:SUBPATH-P">SUBPATH-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SUBPATH BASE</code><code>)</code>  </header> <div class="docstring"><pre>Returns true if SUBPATH is indeed a path underneath BASE.
 
 The actually returned value is the coerced value of SUBPATH by
 ENOUGH-PATHNAME.
 
-See ENOUGH-PATHNAME</pre> </article> </li><li> <a name="PATHNAME-UTILS:TO-DIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-DIRECTORY">TO-DIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Turns the pathname into a pathname-directory if it is not already one.
+See <a href="#PATHNAME-UTILS:ENOUGH-PATHNAME">ENOUGH-PATHNAME</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:TO-DIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-DIRECTORY">TO-DIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Turns the pathname into a pathname-directory if it is not already one.
 
 If the argument is :UP or :BACK, it is turned into a relative
 pathname with the argument as its only pathname-directory-component.
@@ -228,24 +230,24 @@ pointing to the home directory.
 If the argument is NIL, it is turned into an empty relative pathname.
 Otherwise the pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:TO-FILE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-FILE">TO-FILE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Turns the pathname into a file pathname.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:TO-FILE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-FILE">TO-FILE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Turns the pathname into a file pathname.
 
 This means stripping the device, host, and directory components
 of the pathname. The given pathname is coerced using PATHNAME*
 
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:TO-PHYSICAL"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-PHYSICAL">TO-PHYSICAL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Turns the pathname into a physical one if it is not already one.
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:TO-PHYSICAL"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-PHYSICAL">TO-PHYSICAL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Turns the pathname into a physical one if it is not already one.
 
 The pathname is coerced using PATHNAME*
 
-See LOGICAL-P
-See CL:TRANSLATE-LOGICAL-PATHNAME
-See PATHNAME*</pre> </article> </li><li> <a name="PATHNAME-UTILS:TO-ROOT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-ROOT">TO-ROOT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Returns the absolute root of the pathname.</pre> </article> </li><li> <a name="PATHNAME-UTILS:UNSPECIFIC-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:UNSPECIFIC-P">UNSPECIFIC-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">COMPONENT</code><code>)</code>  </header> <pre class="docstring">Returns true if the given component is unspecific.
+See <a href="#PATHNAME-UTILS:LOGICAL-P">LOGICAL-P</a>
+See <a href="http://l1sp.org/cl/translate-logical-pathname">CL:TRANSLATE-LOGICAL-PATHNAME</a>
+See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:TO-ROOT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:TO-ROOT">TO-ROOT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the absolute root of the pathname.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:UNSPECIFIC-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:UNSPECIFIC-P">UNSPECIFIC-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">COMPONENT</code><code>)</code>  </header> <div class="docstring"><pre>Returns true if the given component is unspecific.
 
-This includes :UNSPECIFIC, NIL, and the empty string.</pre> </article> </li><li> <a name="PATHNAME-UTILS:UPWARDS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:UPWARDS">UPWARDS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <pre class="docstring">Moves the topmost pathname component a level upwards.
+This includes :UNSPECIFIC, NIL, and the empty string.</pre></div> </article> </li><li> <a name="PATHNAME-UTILS:UPWARDS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:UPWARDS">UPWARDS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Moves the topmost pathname component a level upwards.
 
 Specifically, if we have a file &quot;foo/bar/baz.jpg&quot;, and move
 it upwards by one, the resulting pathname will be 
 &quot;foo/baz.jpg&quot;. If the pathname is a directory-pathname then
 the last directory is moved upwards by one.
 
-See PARENT</pre> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
+See <a href="#PATHNAME-UTILS:PARENT">PARENT</a></pre></div> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
