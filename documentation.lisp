@@ -212,7 +212,7 @@ See PATHNAME*")
    "Returns a directory-pathname with the given subdirectories appended.
 
 For example, appending \"bar\" and \"baz\" to \"foo/\" will
-result in \"foo/bar/baz\".
+result in \"foo/bar/baz/\".
 
 The PATHNAME is coerced using TO-DIRECTORY. For any of the
 subdirs, if it is a pathname, stream, or keyword, it is coerced

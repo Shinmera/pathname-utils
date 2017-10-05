@@ -1,4 +1,4 @@
-<!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta charset="utf-8"/> <title>Pathname-Utils</title> <meta name="viewport" content="width=device-width"/> <meta name="description" content="A collection of utilities for pathname manipulation."/> <meta name="author" content="Nicolas Hafner &lt;shinmera@tymoon.eu&gt;"/> <style type="text/css"> body{
+<!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta charset="utf-8"> <title>Pathname-Utils</title> <meta name="viewport" content="width=device-width"> <meta name="description" content="A collection of utilities for pathname manipulation."> <meta name="author" content="Nicolas Hafner &lt;shinmera@tymoon.eu&gt;"> <style type="text/css"> body{
           max-width: 1024px;
           margin: 0 auto 0 auto;
           font-family: sans-serif;
@@ -161,7 +161,7 @@ the same due to symbolic links or similar effects in the file
 system.
 
 See <a href="http://l1sp.org/cl/truename">CL:TRUENAME</a>
-See <a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME="> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B</code><code>)</code>  </header> <div class="docstring"><pre>Returns T if the two pathnames are the same.
+See <a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PATHNAME="> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PATHNAME=">PATHNAME=</a></code></h4> <code class="qualifiers"></code> <code class="arguments">A B &amp;KEY (IGNORE-VERSION T)</code><code>)</code>  </header> <div class="docstring"><pre>Returns T if the two pathnames are the same.
 
 Note that this comparison is purely based on the pathnames itself
 and does not check whether the two might resolve to the same file
@@ -171,8 +171,13 @@ Relative pathnames are turned into absolute ones by merging them
 with *default-pathname-defaults* before being compared.
 
 Each component of the pathnames are compared using EQUAL, but
-treating parts that are UNSPECIFIC-P as the same, irregardless
+treating parts that are UNSPECIFIC-P as the same, regardless
 of the way in which they might be unspecific.
+
+If IGNORE-VERSION is non-NIL (the default), then the version
+component of the pathnames is not compared. This is useful, as it
+can be different for pathnames that appear to be the same on some
+implementations.
 
 See <a href="#PATHNAME-UTILS:UNSPECIFIC-P">UNSPECIFIC-P</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:PHYSICAL-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:PHYSICAL-P">PHYSICAL-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME</code><code>)</code>  </header> <div class="docstring"><pre>Returns the pathname if it is a physical pathname.
 
@@ -209,7 +214,7 @@ The pathname is coerced using PATHNAME*
 See <a href="#PATHNAME-UTILS:PATHNAME*">PATHNAME*</a></pre></div> </article> </li><li> <a name="PATHNAME-UTILS:SUBDIRECTORY"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#PATHNAME-UTILS:SUBDIRECTORY">SUBDIRECTORY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PATHNAME &amp;REST SUBDIRS</code><code>)</code>  </header> <div class="docstring"><pre>Returns a directory-pathname with the given subdirectories appended.
 
 For example, appending &quot;bar&quot; and &quot;baz&quot; to &quot;foo/&quot; will
-result in &quot;foo/bar/baz&quot;.
+result in &quot;foo/bar/baz/&quot;.
 
 The PATHNAME is coerced using TO-DIRECTORY. For any of the
 subdirs, if it is a pathname, stream, or keyword, it is coerced
