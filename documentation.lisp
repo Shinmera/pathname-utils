@@ -150,8 +150,13 @@ Relative pathnames are turned into absolute ones by merging them
 with *default-pathname-defaults* before being compared.
 
 Each component of the pathnames are compared using EQUAL, but
-treating parts that are UNSPECIFIC-P as the same, irregardless
+treating parts that are UNSPECIFIC-P as the same, regardless
 of the way in which they might be unspecific.
+
+If IGNORE-VERSION is non-NIL (the default), then the version
+component of the pathnames is not compared. This is useful, as it
+can be different for pathnames that appear to be the same on some
+implementations.
 
 See UNSPECIFIC-P")
 

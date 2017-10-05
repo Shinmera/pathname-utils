@@ -110,7 +110,7 @@
     (and (relative-p pathname)
          pathname)))
 
-(defun pathname= (a b)
+(defun pathname= (a b &key (ignore-version T))
   (let ((a (normalize-pathname a))
         (b (normalize-pathname b)))
     (labels ((normalize (part)
@@ -122,7 +122,8 @@
            (part= #'pathname-type)
            (part= #'pathname-host)
            (part= #'pathname-device)
-           (part= #'pathname-version)
+           (or ignore-version
+               (part= #'pathname-version))
            (part= #'pathname-directory)
            T))))
 
