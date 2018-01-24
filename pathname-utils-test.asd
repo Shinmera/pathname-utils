@@ -4,16 +4,14 @@
  Author: Nicolas Hafner <shinmera@tymoon.eu>
 |#
 
-(asdf:defsystem pathname-utils
+(asdf:defsystem pathname-utils-test
   :version "1.0.0"
   :license "Artistic"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
-  :description "A collection of utilities for pathname manipulation."
+  :description "Tests for the pathname-utils system."
   :homepage "https://github.com/Shinmera/pathname-utils"
   :serial T
-  :components ((:file "package")
-               (:file "toolkit")
-               (:file "documentation"))
-  :depends-on ()
-  :in-order-to ((asdf:test-op (asdf:test-op :pathname-utils-test))))
+  :components ((:file "test"))
+  :depends-on (:pathname-utils :parachute)
+  :perform (asdf:test-op (op c) (uiop:symbol-call :parachute :test :pathname-utils-test)))
