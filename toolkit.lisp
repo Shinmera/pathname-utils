@@ -7,13 +7,14 @@
 (in-package #:org.shirakumo.pathname-utils)
 
 (defvar *wild-component* #+cormanlisp "*" #-cormanlisp :wild)
+(defvar *wild-inferiors-component* #+cormanlisp "**" #-cormanlisp :wild-inferiors)
 (defvar *wild-file* (make-pathname :directory NIL
                                    :name *wild-component*
                                    :type *wild-component*
                                    :version (and #-(or allegro abcl xcl) *wild-component*)))
-(defvar *wild-directory* (make-pathname :directory `(:relative :wild)
+(defvar *wild-directory* (make-pathname :directory `(:relative ,*wild-component*)
                                         :name NIL :type NIL :version NIL))
-(defvar *wild-inferiors* (make-pathname :directory '(:relative :wild-inferiors)
+(defvar *wild-inferiors* (make-pathname :directory `(:relative ,*wild-inferiors-component*)
                                         :name NIL :type NIL :version NIL))
 (defvar *wild-path* (merge-pathnames *wild-file* *wild-directory*))
 
@@ -37,13 +38,15 @@
 (defun normalize-directory-spec (dir)
   (clean-directory-spec
    (etypecase dir
-     (null NIL)
      (string `(:absolute ,dir))
+     ((member :wild :wild-inferiors) `(:relative ,dir))
      (cons
       (if (member (first dir) '(:absolute :relative))
           dir
           #+gcl `(:relative ,dir)
-          #-gcl (error "Invalid directory component ~s" dir))))))
+          #-gcl (error "Invalid directory component ~s" dir)))
+     (T (unless (unspecific-p dir)
+          dir)))))
 
 (defun normalize-pathname (pathname)
   (let ((pathname (pathname pathname)))
@@ -65,50 +68,67 @@
     (T (normalize-pathname pathname))))
 
 (defun unspecific-p (component)
-  (member component '(NIL :unspecific "")))
+  (or (eq component NIL)
+      (eq component :unspecific)
+      (and (stringp component)
+           (= 0 (length component)))))
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (or (eql :relative (car (pathname-directory pathname)))
-             (unspecific-p (pathname-directory pathname)))
-         pathname)))
+    (when (or (eql :relative (car (pathname-directory pathname)))
+              (unspecific-p (pathname-directory pathname)))
+      pathname)))
 
 (defun absolute-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (eql :absolute (car (pathname-directory pathname)))
-         pathname)))
+    (when (eql :absolute (car (pathname-directory pathname)))
+      pathname)))
 
 (defun logical-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (typep (pathname* pathname) 'logical-pathname)
-         pathname)))
+    (when (typep (pathname* pathname) 'logical-pathname)
+      pathname)))
 
 (defun physical-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (typep (pathname* pathname) '(and pathname (not logical-pathname)))
-         pathname)))
+    (when (typep (pathname* pathname) '(and pathname (not logical-pathname)))
+      pathname)))
 
 (defun root-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (directory-p pathname)
-         (equal (pathname-directory pathname) '(:absolute))
-         pathname)))
+    (when (and (directory-p pathname)
+               (equal '(:absolute) (normalize-directory-spec (pathname-directory pathname))))
+      pathname)))
 
 (defun directory-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (unspecific-p (pathname-name pathname))
-         (unspecific-p (pathname-type pathname))
-         pathname)))
+    (when (and (unspecific-p (pathname-name pathname))
+               (unspecific-p (pathname-type pathname)))
+      pathname)))
 
 (defun file-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (and (not (directory-p pathname))
-         pathname)))
+    (unless (directory-p pathname)
+      pathname)))
 
-(defun subpath-p (subpath base)
-  (let ((pathname (enough-pathname subpath base)))
-    (and (relative-p pathname)
-         pathname)))
+(defun subpath-p (subpath base &optional (root base))
+  (when (relative-p root)
+    (error "Cannot compare subpathness for a relative pathname root."))
+  (let* ((subpath (normalize-pathname subpath))
+         (base (normalize-pathname base))
+         (subspec (cdr (pathname-directory (merge-pathnames subpath root))))
+         (basespec (cdr (pathname-directory (merge-pathnames base root)))))
+    (when (and (equal (pathname-host subpath) (pathname-host base))
+               (equal (pathname-device subpath) (pathname-device base))
+               (or (null (pathname-name base))
+                   (equal (pathname-name subpath) (pathname-name base)))
+               (or (null (pathname-type base))
+                   (equal (pathname-type subpath) (pathname-type base)))
+               (loop for (s . sr) on subspec
+                     for (b . br) on basespec
+                     do (unless (equal s b) (return))
+                     finally (return (null br))))
+      subpath)))
 
 (defun pathname= (a b &key (ignore-version T))
   (let ((a (normalize-pathname a))
@@ -124,8 +144,8 @@
            (part= #'pathname-device)
            (or ignore-version
                (part= #'pathname-version))
-           (part= #'pathname-directory)
-           T))))
+           (equal (normalize-directory-spec (pathname-directory a))
+                  (normalize-directory-spec (pathname-directory b)))))))
 
 (defun pathname-equal (a b)
   (pathname= (truename a) (truename b)))
@@ -141,9 +161,8 @@
 
 (defun to-directory (pathname)
   (case pathname
-    ((:up :back) (make-pathname :name NIL :type NIL :version NIL :directory `(:relative ,pathname)))
-    ((:home) (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute :home)))
-    ((NIL) (make-pathname :directory '(:relative)))
+    ((:up :back) (make-pathname :name NIL :type NIL :version NIL :directory `(:relative ,pathname) :defaults #p""))
+    ((:home) (make-pathname :name NIL :type NIL :version NIL :defaults (user-homedir-pathname)))
     (T (make-pathname :name NIL :type NIL :version NIL :defaults (pathname* pathname)))))
 
 (defun to-file (pathname)
@@ -160,9 +179,10 @@
         finally (return dir)))
 
 (defun pop-directory (pathname)
-  (let ((pathname (pathname* pathname)))
-    (make-pathname :directory (list* (car (pathname-directory pathname))
-                                     (butlast (cdr (pathname-directory pathname))))
+  (let* ((pathname (pathname* pathname))
+         (directory (pathname-directory pathname)))
+    (make-pathname :directory (when directory
+                                (list* (car directory) (butlast (cdr directory))))
                    :defaults pathname)))
 
 (defun parent (pathname)
@@ -171,19 +191,23 @@
            (let ((dir (pathname-directory pathname)))
              (if (root-p pathname)
                  pathname
-                 (make-pathname
-                  :directory (typecase (car (last (cdr dir)))
-                               (null (list :relative :up))
-                               (string (list* (car dir) (butlast (cdr dir))))
-                               (T (append dir '(:up))))
-                  :defaults pathname))))
+                 (let ((dir (typecase (car (last (cdr dir)))
+                              (null (list :relative :up))
+                              (string (list* (car dir) (butlast (cdr dir))))
+                              (T (append dir '(:up))))))
+                   (make-pathname
+                    :directory (unless (equal '(:relative) dir)
+                                 dir)
+                    :defaults pathname)))))
           (T
            (to-directory pathname)))))
 
 (defun upwards (pathname)
   (cond ((directory-p pathname)
-         (subdirectory (parent (parent pathname))
-                       (directory-name pathname)))
+         (if (null (cdr (normalize-directory-spec (pathname-directory pathname))))
+             (parent pathname)
+             (subdirectory (parent (parent pathname))
+                           (directory-name pathname))))
         (T
          (make-pathname :directory (pathname-directory
                                     (parent (to-directory pathname)))
@@ -191,9 +215,12 @@
 
 (defun downwards (pathname subdir)
   (cond ((directory-p pathname)
-         (subdirectory (parent pathname)
-                       subdir
-                       (directory-name pathname)))
+         (if (null (cdr (normalize-directory-spec (pathname-directory pathname))))
+             (subdirectory pathname
+                           subdir)
+             (subdirectory (parent pathname)
+                           subdir
+                           (directory-name pathname))))
         (T
          (make-pathname :directory (pathname-directory (subdirectory pathname subdir))
                         :defaults pathname))))
@@ -219,7 +246,9 @@
             do (push :up final-dir))
       (loop for to in (reverse to-dir)
             do (push to final-dir))
-      (make-pathname :directory (nreverse final-dir) :defaults to))))
+      (make-pathname :directory (unless (equal '(:relative) final-dir)
+                                  (nreverse final-dir))
+                     :defaults to))))
 
 (defun file-type (pathname)
   (let ((pathname (pathname pathname)))
@@ -234,7 +263,9 @@
 
 (defun file-name (pathname)
   (let ((pathname (pathname pathname)))
-    (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname))))
+    (if (directory-p pathname)
+        NIL
+        (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname)))))
 
 (defun directory-name (pathname)
   (let ((pathname (to-directory pathname)))
@@ -242,4 +273,16 @@
 
 (defun directory-separator (&optional (pathname *default-pathname-defaults*))
   (let ((name (namestring (make-pathname :directory '(:absolute "nowhere") :defaults pathname))))
-    (char name (1- (length name)))))
+    (subseq name (+ (search "nowhere" name) (length "nowhere")))))
+
+(defun components (pathname)
+  (let ((pathname (pathname* pathname)))
+    (list
+     :namestring (namestring pathname)
+     :truename (ignore-errors (truename pathname))
+     :host (pathname-host pathname)
+     :device (pathname-device pathname)
+     :name (pathname-name pathname)
+     :type (pathname-type pathname)
+     :version (pathname-version pathname)
+     :directory (pathname-directory pathname))))

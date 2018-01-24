@@ -28,6 +28,9 @@
 (setdocs
   ((*wild-component* variable)
    "The proper value to use for a wild pathname component.")
+
+  ((*wild-inferiors-component* variable)
+   "The proper value to use for a wild inferiors pathname component.")
   
   ((*wild-file* variable)
    "A pathname that is wild in its file spec (can match any file).")
@@ -132,12 +135,25 @@ The pathname is coerced using PATHNAME*
 See PATHNAME*")
   
   (subpath-p
-   "Returns true if SUBPATH is indeed a path underneath BASE.
+   "Returns true if SUBPATH denotes a path on a lower level than BASE.
+
+A pathname is considered a subpath of a base pathname if all of
+the following are true:
+- Their hosts match
+- Their devices match
+- The base's name is null or their names match
+- The base's type is null or their types match
+- The directory component of the subpath denotes a subdirectory
+  of the directory component of the base.
+
+If the subpath or base are relative pathnames, they are made
+absolute by merging them with the root pathname. If the root
+pathname is relative, an error is signalled.
 
 The actually returned value is the coerced value of SUBPATH by
-ENOUGH-PATHNAME.
+NORMALIZE-PATHNAME.
 
-See ENOUGH-PATHNAME")
+See NORMALIZE-PATHNAME")
   
   (pathname=
    "Returns T if the two pathnames are the same.
@@ -194,8 +210,7 @@ See PATHNAME*")
 If the argument is :UP or :BACK, it is turned into a relative
 pathname with the argument as its only pathname-directory-component.
 If the argument is :HOME, it is turned into an absolute pathname
-pointing to the home directory. 
-If the argument is NIL, it is turned into an empty relative pathname.
+pointing to the home directory.
 Otherwise the pathname is coerced using PATHNAME*
 
 See PATHNAME*")
@@ -219,12 +234,18 @@ subdirs, if it is a pathname, stream, or keyword, it is coerced
 to a pathname using TO-DIRECTORY. If it is a string, it is
 coerced using TO-DIRECTORY but with a trailing slash appended.
 
+If you need to preserve the pathname's file component, consider
+using DOWNWARDS instead.
+
 See TO-DIRECTORY")
   
   (pop-directory
    "Pops the last component off the pathname-directory part.
 
-The pathname is coerced using PATHNAME*
+The pathname is coerced using PATHNAME*.
+Note that this will probably not behave as expected for
+pathnames containing :back and :up. For the \"intuitive\"
+behaviour to ascend pathnames, see PARENT or UPWARDS.
 
 See PATHNAME*")
   
@@ -239,7 +260,10 @@ it is not empty, then the last component of the directory is
 removed. If the pathname is a file pathname, this is equivalent
 to TO-DIRECTORY.
 
-The pathname is coerced using PATHNAME*
+The pathname is coerced using PATHNAME*.
+
+If you need to preserve the pathname's file component, consider
+using UPWARDS instead.
 
 See PATHNAME*
 See TO-DIRECTORY")
@@ -301,7 +325,7 @@ PATHNAME-NAME is specific, and it contains a dot, then that last
 part is used instead. Otherwise NIL is returned.")
   
   (file-name
-   "Returns the complete file name as it would be used by the OS.")
+   "Returns the complete file name as it would be used by the OS, if any.")
   
   (directory-name
    "Returns the name of the topmost directory in the pathname, if any.
@@ -311,4 +335,19 @@ The pathname is coerced using TO-DIRECTORY
 See TO-DIRECTORY")
   
   (directory-separator
-   "Returns the namestring separator between directories."))
+   "Returns the namestring separator between directories as a string.")
+
+  (components
+   "Returns a plist containing all the components making up the given pathname.
+
+The plist contains the following keys:
+  :namestring
+  :truename
+  :host
+  :device
+  :name
+  :type
+  :version
+  :directory
+
+If the pathname has no truename, its value in the plist is NIL."))

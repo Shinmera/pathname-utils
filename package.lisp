@@ -10,6 +10,7 @@
   (:use #:cl)
   (:export
    #:*wild-component*
+   #:*wild-inferiors-component*
    #:*wild-file*
    #:*wild-directory*
    #:*wild-inferiors*
@@ -43,4 +44,5 @@
    #:file-type
    #:file-name
    #:directory-name
-   #:directory-separator))
+   #:directory-separator
+   #:components))
