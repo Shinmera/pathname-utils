@@ -41,6 +41,7 @@
    #:downwards
    #:enough-pathname
    #:relative-pathname
+   #:file-in
    #:file-type
    #:file-name
    #:directory-name

@@ -250,6 +250,11 @@
                                   (nreverse final-dir))
                      :defaults to))))
 
+(defun file-in (directory file)
+  (make-pathname :name (pathname-name file)
+                 :type (pathname-type file)
+                 :defaults directory))
+
 (defun file-type (pathname)
   (let ((pathname (pathname pathname)))
     (let ((type (pathname-type pathname))

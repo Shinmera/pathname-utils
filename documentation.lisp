@@ -313,6 +313,13 @@ The pathnames are coerced using NORMALIZE-PATHNAME after the
 merge.
 
 See NORMALIZE-PATHNAME")
+
+  (file-in
+   "Returns a pathname to the given file but in the given directory.
+
+This is useful when carrying over a file to another directory.
+Essentially this constructs a pathname with the name and type
+of FILE, but the rest of DIR.")
   
   (file-type
    "Returns the actual file type.

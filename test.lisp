@@ -273,6 +273,14 @@
   (is pathname= #p"b/c" (relative-pathname #p"a/" #p"a/b/c"))
   (is pathname= (make-pathname :directory '(:relative :up "d")) (relative-pathname #p"/a/b/" #p"/a/d/")))
 
+(define-test file-in
+  :parent queries
+  (is pathname= #p"/a.b" (file-in #p"/" #p"a.b"))
+  (is pathname= #p"/b.c" (file-in #p"/a" #p"b.c"))
+  (is pathname= #p"/c" (file-in #p"/a.b" #p"c"))
+  (is pathname= #p"/a/b.c" (file-in #p"/a/" #p"b.c"))
+  (is pathname= #p"/a/c.d" (file-in #p"/a/" #p"b/c.d")))
+
 (define-test file-type
   :parent queries
   :depends-on (unspecific-p)
