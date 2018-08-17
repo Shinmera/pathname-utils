@@ -10,7 +10,9 @@
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
   :description "Tests for the pathname-utils system."
-  :homepage "https://github.com/Shinmera/pathname-utils"
+  :homepage "https://Shinmera.github.io/pathname-utils/"
+  :bug-tracker "https://github.com/Shinmera/pathname-utils/issues"
+  :source-control (:git "https://github.com/Shinmera/pathname-utils.git")
   :serial T
   :components ((:file "test"))
   :depends-on (:pathname-utils :parachute)
