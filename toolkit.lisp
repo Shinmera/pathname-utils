@@ -11,7 +11,7 @@
 (defvar *wild-file* (make-pathname :directory NIL
                                    :name *wild-component*
                                    :type *wild-component*
-                                   :version (and #-(or allegro abcl xcl) *wild-component*)))
+                                   :version (or #-(or allegro abcl xcl) *wild-component*)))
 (defvar *wild-directory* (make-pathname :directory `(:relative ,*wild-component*)
                                         :name NIL :type NIL :version NIL))
 (defvar *wild-inferiors* (make-pathname :directory `(:relative ,*wild-inferiors-component*)
