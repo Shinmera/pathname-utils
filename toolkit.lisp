@@ -170,13 +170,16 @@
                  :defaults (pathname* pathname)))
 
 (defun subdirectory (pathname &rest subdirs)
-  (loop for sub in subdirs
-        for subpath = (etypecase sub
-                        ((or pathname keyword stream) (to-directory sub))
-                        (string (to-directory (concatenate 'string sub "/"))))
-        for dir = (merge-pathnames subpath (to-directory pathname))
-        then (merge-pathnames subpath dir)
-        finally (return dir)))
+  (let* ((base (to-directory pathname))
+         (basedir (or (pathname-directory base) '(:relative)))
+         (subdir (loop for sub in subdirs
+                       for subpath = (etypecase sub
+                                       ((or pathname keyword stream) (to-directory sub))
+                                       (string (to-directory (concatenate 'string sub "/"))))
+                       append (cdr (pathname-directory subpath)))))
+    (make-pathname
+     :directory (append basedir subdir)
+     :defaults base)))
 
 (defun pop-directory (pathname)
   (let* ((pathname (pathname* pathname))
