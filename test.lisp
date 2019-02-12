@@ -63,13 +63,13 @@
   (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
     (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL)))))
   (is equal NIL (pathname-directory (normalize-pathname (make-pathname :directory NIL))))
-  (skip-on (ecl) ":unspecific is not allowed in pathname components."
+  (skip-on (ecl clisp) ":unspecific is not allowed in pathname components."
     (is equal NIL (pathname-device (normalize-pathname (make-pathname :device :unspecific))))
     (is equal NIL (pathname-name (normalize-pathname (make-pathname :name :unspecific))))
     (is equal NIL (pathname-type (normalize-pathname (make-pathname :type :unspecific))))
     (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
       (is equal NIL (pathname-version (normalize-pathname (make-pathname :version :unspecific))))))
-  (skip-on (allegro) "Allegro does not allow a string for the device component"
+  (skip-on (allegro clisp) "This implementation does not allow a string for the device component"
    (is equal NIL (pathname-device (normalize-pathname (make-pathname :device "")))))
   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name ""))))
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type ""))))
