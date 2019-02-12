@@ -13,6 +13,13 @@
 
 (define-test pathname-utils)
 
+(defmacro skip-on (impls explanation &body body)
+  `(,@(if (loop for impl in impls
+                thereis (find impl *features* :test #'string=))
+          (list 'skip explanation)
+          (list 'progn))
+    ,@body))
+
 (define-test normalization
   :parent pathname-utils)
 
@@ -53,20 +60,22 @@
   (is equal NIL (pathname-device (normalize-pathname (make-pathname :device NIL))))
   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name NIL))))
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type NIL))))
-  (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL))))
+  (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
+    (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL)))))
   (is equal NIL (pathname-directory (normalize-pathname (make-pathname :directory NIL))))
-  (#+ecl skip #+ecl ":unspecific is not allowed in pathname components."
-   #-ecl progn
-   (is equal NIL (pathname-device (normalize-pathname (make-pathname :device :unspecific))))
-   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name :unspecific))))
-   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type :unspecific))))
-   (is equal NIL (pathname-version (normalize-pathname (make-pathname :version :unspecific)))))
-  (is equal NIL (pathname-device (normalize-pathname (make-pathname :device ""))))
+  (skip-on (ecl) ":unspecific is not allowed in pathname components."
+    (is equal NIL (pathname-device (normalize-pathname (make-pathname :device :unspecific))))
+    (is equal NIL (pathname-name (normalize-pathname (make-pathname :name :unspecific))))
+    (is equal NIL (pathname-type (normalize-pathname (make-pathname :type :unspecific))))
+    (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
+      (is equal NIL (pathname-version (normalize-pathname (make-pathname :version :unspecific))))))
+  (skip-on (allegro) "Allegro does not allow a string for the device component"
+   (is equal NIL (pathname-device (normalize-pathname (make-pathname :device "")))))
   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name ""))))
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type ""))))
-  (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL))))
-  (#+ccl skip #+ccl "CCL parses (make-pathname :directory \"\") badly."
-   #-ccl progn
+  (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
+    (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL)))))
+  (skip-on (allegro ccl) "This implementation parses (make-pathname :directory \"\") badly."
    (is equal '(:absolute) (pathname-directory (normalize-pathname (make-pathname :directory ""))))))
 
 (define-test pathname*
