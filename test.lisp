@@ -55,15 +55,19 @@
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type NIL))))
   (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL))))
   (is equal NIL (pathname-directory (normalize-pathname (make-pathname :directory NIL))))
-  (is equal NIL (pathname-device (normalize-pathname (make-pathname :device :unspecific))))
-  (is equal NIL (pathname-name (normalize-pathname (make-pathname :name :unspecific))))
-  (is equal NIL (pathname-type (normalize-pathname (make-pathname :type :unspecific))))
-  (is equal NIL (pathname-version (normalize-pathname (make-pathname :version :unspecific))))
+  (#+ecl skip #+ecl ":unspecific is not allowed in pathname components."
+   #-ecl progn
+   (is equal NIL (pathname-device (normalize-pathname (make-pathname :device :unspecific))))
+   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name :unspecific))))
+   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type :unspecific))))
+   (is equal NIL (pathname-version (normalize-pathname (make-pathname :version :unspecific)))))
   (is equal NIL (pathname-device (normalize-pathname (make-pathname :device ""))))
   (is equal NIL (pathname-name (normalize-pathname (make-pathname :name ""))))
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type ""))))
   (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL))))
-  (is equal '(:absolute) (pathname-directory (normalize-pathname (make-pathname :directory "")))))
+  (#+ccl skip #+ccl "CCL parses (make-pathname :directory \"\") badly."
+   #-ccl progn
+   (is equal '(:absolute) (pathname-directory (normalize-pathname (make-pathname :directory ""))))))
 
 (define-test pathname*
   :parent normalization
