@@ -237,7 +237,7 @@
     (unless (equal (pathname-host from) (pathname-host to))
       (error "Cannot relativise pathnames across hosts."))
     (unless (equal (pathname-device from) (pathname-device to))
-      (error "Cannot realtivise pathnames across devices."))
+      (error "Cannot relativise pathnames across devices."))
     (let ((from-dir (copy-list (pathname-directory from)))
           (to-dir (copy-list (pathname-directory to)))
           (final-dir (list :relative)))
