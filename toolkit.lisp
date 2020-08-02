@@ -247,7 +247,7 @@
             do (pop from-dir) (pop to-dir))
       (loop repeat (length from-dir)
             do (push :up final-dir))
-      (loop for to in (reverse to-dir)
+      (loop for to in to-dir
             do (push to final-dir))
       (make-pathname :directory (unless (equal '(:relative) final-dir)
                                   (nreverse final-dir))
