@@ -284,6 +284,7 @@
   (is pathname= #p"a/" (relative-pathname #p"/" #p"/a/"))
   (is pathname= #p"a" (relative-pathname #p"/" #p"/a"))
   (is pathname= #p"b/c" (relative-pathname #p"a/" #p"a/b/c"))
+  (is pathname= #p"b/c/" (relative-pathname #p"a/" #p"a/b/c/"))
   (is pathname= (make-pathname :directory '(:relative :up "d")) (relative-pathname #p"/a/b/" #p"/a/d/")))
 
 (define-test file-in
