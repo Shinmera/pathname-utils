@@ -75,8 +75,9 @@
   (is equal NIL (pathname-type (normalize-pathname (make-pathname :type ""))))
   (skip-on (allegro) "Allegro's pathname-version always returns :unspecific, even if NIL is supplied."
     (is equal NIL (pathname-version (normalize-pathname (make-pathname :version NIL)))))
-  (skip-on (allegro ccl) "This implementation parses (make-pathname :directory \"\") badly."
-   (is equal '(:absolute) (pathname-directory (normalize-pathname (make-pathname :directory ""))))))
+  (is equal '(:absolute "a") (pathname-directory (normalize-pathname (make-pathname :directory "a"))))
+  (skip-on (allegro ccl lispworks) "This implementation parses (make-pathname :directory \"\") badly."
+    (is equal '(:absolute) (pathname-directory (normalize-pathname (make-pathname :directory ""))))))
 
 (define-test pathname*
   :parent normalization
