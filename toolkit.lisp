@@ -124,7 +124,7 @@
                    (equal (pathname-name subpath) (pathname-name base)))
                (or (null (pathname-type base))
                    (equal (pathname-type subpath) (pathname-type base)))
-               (loop for (s . sr) on subspec
+               (loop for (s . nil) on subspec
                      for (b . br) on basespec
                      do (unless (equal s b) (return))
                      finally (return (null br))))
