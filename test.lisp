@@ -286,7 +286,11 @@
   (is pathname= #p"a" (relative-pathname #p"/" #p"/a"))
   (is pathname= #p"b/c" (relative-pathname #p"a/" #p"a/b/c"))
   (is pathname= #p"b/c/" (relative-pathname #p"a/" #p"a/b/c/"))
-  (is pathname= (make-pathname :directory '(:relative :up "d")) (relative-pathname #p"/a/b/" #p"/a/d/")))
+  (is pathname= (make-pathname :directory '(:relative :up "d")) (relative-pathname #p"/a/b/" #p"/a/d/"))
+  #+windows
+  (is pathname= #p"b/c/" (relative-pathname #p"a:/a/" #p"a:/a/b/c/"))
+  #+windows
+  (fail (relative-pathname #p"a:/a/" #p"b:/a/b/c/")))
 
 (define-test file-in
   :parent queries

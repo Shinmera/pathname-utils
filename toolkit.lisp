@@ -251,6 +251,7 @@
             do (push to final-dir))
       (make-pathname :directory (unless (equal '(:relative) final-dir)
                                   (nreverse final-dir))
+                     :device NIL
                      :defaults to))))
 
 (defun file-in (directory file)
