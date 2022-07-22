@@ -169,6 +169,17 @@
   (make-pathname :directory NIL :device NIL :host NIL
                  :defaults (pathname* pathname)))
 
+(defun to-relative (pathname)
+  (let ((pathname (pathname* pathname)))
+    (make-pathname :directory (when (rest (pathname-directory pathname))
+                                (list* :relative (rest (pathname-directory pathname))))
+                   :defaults pathname)))
+
+(defun to-absolute (pathname)
+  (let ((pathname (pathname* pathname)))
+    (make-pathname :directory (list* :absolute (rest (pathname-directory pathname)))
+                   :defaults pathname)))
+
 (defun subdirectory (pathname &rest subdirs)
   (let* ((base (to-directory pathname))
          (basedir (or (pathname-directory base) '(:relative)))

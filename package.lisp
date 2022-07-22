@@ -34,6 +34,8 @@
    #:to-physical
    #:to-directory
    #:to-file
+   #:to-relative
+   #:to-absolute
    #:subdirectory
    #:pop-directory
    #:parent

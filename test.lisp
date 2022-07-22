@@ -218,6 +218,24 @@
   (is pathname= #p"b" (to-file "/a/b"))
   (is pathname= #p"" (to-file "/")))
 
+(define-test to-relative
+  :parent coercion
+  :depends-on (pathname*)
+  (is pathname= #p"a" (to-relative "a"))
+  (is pathname= #p"a" (to-relative "/a"))
+  (is pathname= #p"a/b" (to-relative "a/b"))
+  (is pathname= #p"a/b" (to-relative "/a/b"))
+  (is pathname= #p"" (to-relative "/")))
+
+(define-test to-absolute
+  :parent coercion
+  :depends-on (pathname*)
+  (is pathname= #p"/a" (to-absolute "a"))
+  (is pathname= #p"/a" (to-absolute "/a"))
+  (is pathname= #p"/a/b" (to-absolute "a/b"))
+  (is pathname= #p"/a/b" (to-absolute "/a/b"))
+  (is pathname= #p"/" (to-absolute "")))
+
 (define-test operations
   :parent pathname-utils
   :depends-on (predicates))

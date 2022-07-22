@@ -222,6 +222,20 @@ This means stripping the device, host, and directory components
 of the pathname. The given pathname is coerced using PATHNAME*
 
 See PATHNAME*")
+
+  (to-relative
+   "Turns the pathname into a relative pathname.
+
+The given pathname is coerced using PATHNAME*
+
+See PATHNAME*")
+
+  (to-relative
+   "Turns the pathname into an absolute pathname.
+
+The given pathname is coerced using PATHNAME*
+
+See PATHNAME*")
   
   (subdirectory
    "Returns a directory-pathname with the given subdirectories appended.
