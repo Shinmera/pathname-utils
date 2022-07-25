@@ -48,4 +48,7 @@
    #:file-name
    #:directory-name
    #:directory-separator
-   #:components))
+   #:components
+   #:parse-native-namestring
+   #:parse-unix-namestring
+   #:parse-dos-namestring))
