@@ -309,7 +309,7 @@
 
 (defun parse-native-namestring (namestring &key (as :file) junk-allowed)
   #+windows (parse-dos-namestring namestring :as as :junk-allowed junk-allowed)
-  #+unix (parse-unix-namestring namestring :as as :junk-allowed unk-allowed)
+  #+unix (parse-unix-namestring namestring :as as :junk-allowed junk-allowed)
   #-(or windows unix)
   (let ((path (parse-namestring namestring :junk-allowed junk-allowed)))
     (if (and (eql :directory as)
@@ -441,7 +441,7 @@
 
 (defun native-namestring (pathname &key stream junk-allowed)
   #+windows (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
-  #+unix (unix-namestring pathname :stream stream :junk-allowed unk-allowed)
+  #+unix (unix-namestring pathname :stream stream :junk-allowed junk-allowed)
   #-(or windows unix) (write-string (namestring pathname) stream))
 
 (defun unix-namestring (pathname &key (stream) junk-allowed)
@@ -450,28 +450,37 @@
      (with-output-to-string (stream)
        (unix-namestring pathname :stream stream :junk-allowed junk-allowed)))
     (stream
-     (let ((dir (pathname-directory pathname)))
-       (cond ((and (eql :absolute (first dir))
-                   (eql :home (second dir)))
-              (unix-namestring (user-homedir-pathname) :stream stream)
-              (setf dir (cdr dir)))
-             ((eql :absolute (first dir))
-              (write-char #\/ stream)))
-       (loop for component in (rest dir)
-             do (cond ((find component '(:back :up))
-                       (write-string ".." stream))
-                      ((find component '(".." ".") :test #'string=)
-                       (unless junk-allowed
-                         (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
-                                 component pathname))
-                       (write-string component stream))
-                      (T (write-string component stream)))
+     (flet ((write-part (part)
+              (loop for char across part
+                    do (case char
+                         ((#\/ #\Nul)
+                          (unless junk-allowed
+                            (cerror "Don't print the character." "Illegal character ~c in pathname:~%  ~a"
+                                    char pathname)))
+                         (T
+                          (write-char char stream))))))
+       (let ((dir (pathname-directory pathname)))
+         (cond ((and (eql :absolute (first dir))
+                     (eql :home (second dir)))
+                (write-string "~/" stream)
+                (setf dir (cdr dir)))
+               ((eql :absolute (first dir))
                 (write-char #\/ stream)))
-     (when (pathname-name pathname)
-       (write-string (pathname-name pathname) stream))
-     (when (pathname-type pathname)
-       (write-char #\. stream)
-       (write-string (pathname-type pathname) stream))
+         (loop for component in (rest dir)
+               do (cond ((find component '(:back :up))
+                         (write-part ".."))
+                        ((find component '(".." ".") :test #'string=)
+                         (unless junk-allowed
+                           (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
+                                   component pathname))
+                         (write-part component))
+                        (T (write-part component)))
+                  (write-char #\/ stream)))
+       (when (pathname-name pathname)
+         (write-part (pathname-name pathname)))
+       (when (pathname-type pathname)
+         (write-char #\. stream)
+         (write-part (pathname-type pathname))))
      stream)))
 
 (defun dos-namestring (pathname &key (stream) junk-allowed)
@@ -483,7 +492,7 @@
      (flet ((write-part (part)
               (loop for char across part
                     do (case char
-                         ((#\< #\> #\: #\" #\| #\? #\* #\\ #\/)
+                         ((#\< #\> #\: #\" #\| #\? #\* #\\ #\/ #\Nul)
                           (unless junk-allowed
                             (cerror "Don't print the character." "Illegal character ~c in pathname:~%  ~a"
                                     char pathname)))

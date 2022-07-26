@@ -371,4 +371,151 @@ The plist contains the following keys:
   :version
   :directory
 
-If the pathname has no truename, its value in the plist is NIL."))
+If the pathname has no truename, its value in the plist is NIL.")
+
+  (parse-native-namestring
+   "Parse a namestring appropriate for the current platform.
+
+This avoids pitfalls with parsing namestrings with the default common
+lisp functions where possible, as they treat certain characters
+specially to allow for wild pathnames.
+
+You may also pass :AS :DIRECTORY to force the namestring to be turned
+into a directory-pathname even if it does not end in a directory
+separator.
+
+If the namestring contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed.
+
+See NATIVE-NAMESTRING
+See PARSE-UNIX-NAMESTRING
+See PARSE-DOS-NAMESTRING")
+
+  (parse-unix-namestring
+   "Parse a namestring according to Unix rules.
+
+Specifically:
+
+- A path with a leading slash is an absolute path.
+- Any subsequent slash is used as a directory separator.
+- A path with a tilde as the first directory component points to the
+  home directory.
+- A directory component that is empty is ignored.
+- A directory component that is a single dot is ignored.
+- A directory component that is two dots is converted to :BACK.
+- If the namestring is a file namestring:
+  - If the file namestring starts with a dot, the entire file
+    namestring is used as the pathname's name, including the dot.
+  - If the file namestring contains one or more dots not in the
+    leading position, the part after the last dot is used as the
+    pathname type, and the rest as the name.
+
+You may also pass :AS :DIRECTORY to force the namestring to be turned
+into a directory-pathname even if it does not end in a directory
+separator.
+
+If the namestring contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed. If
+the error is continued or :JUNK-ALLOWED T is passed, the component or
+character is ignored. The following characters are illegal:
+  Nul
+
+See PARSE-NATIVE-NAMESTRING")
+
+  (parse-dos-namestring
+   "Parse a namestring according to DOS rules.
+
+Specifically:
+
+- A path starting with a character followed by a colon is an absolute
+  path.
+- Any subsequent slash or backslash is used as a directory separator.
+- A path starting with a directory component that starts and ends with
+  a percentage is denoting a environment-variable-relative pathname
+  and is parsed by merging the rest of the parsed pathname with the
+  pathname resulting from parsing the environment variable of the
+  indicated name. If the variable is empty or does not exist, it is
+  ignored.
+- A directory component that is empty is ignored.
+- A directory component that is a single dot is ignored.
+- A directory component that is two dots is converted to :BACK.
+- If the namestring is a file namestring:
+  - If the file namestring starts with a dot, the entire file
+    namestring is used as the pathname's name, including the dot.
+  - If the file namestring contains one or more dots not in the
+    leading position, the part after the last dot is used as the
+    pathname type, and the rest as the name.
+
+You may also pass :AS :DIRECTORY to force the namestring to be turned
+into a directory-pathname even if it does not end in a directory
+separator.
+
+If the namestring contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed. If
+the error is continued or :JUNK-ALLOWED T is passed, the component or
+character is ignored. The following characters are illegal:
+  < > : \" | ? * Nul
+
+See PARSE-NATIVE-NAMESTRING")
+
+  (native-namestring
+   "Produce a namestring appropriate for the current platform.
+
+This avoids pitfalls with printing namestrings with the default common
+lisp functions, as they may contain unsuitable characters, or syntax
+not known to other native applications.
+
+If the pathname contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed.
+
+If STREAM is NIL, the namestring is printed to a string and returned.
+
+See PARSE-NATIVE-NAMESTRING
+See UNIX-NAMESTRING
+See DOS-NAMESTRING")
+
+  (unix-namestring
+   "Produce a namestring according to Unix rules.
+
+- If the pathname is absolute:
+  - If the first directory component is :HOME, ~/ is emitted
+  - Otherwise / is emitted
+- For every directory component, the component followed by a slash is
+  emitted. In the case of :UP or :BACK, they are emitted as two dots.
+- The pathname name, if any, is emitted
+- The pathname type, if any, is emitted following a dot.
+
+If the pathname contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed. If
+the error is continued or :JUNK-ALLOWED T is passed, the component or
+character is ignored. The following characters are illegal:
+  / Nul
+
+If STREAM is NIL, the namestring is printed to a string and returned.
+
+See NATIVE-NAMESTRING")
+  
+  (dos-namestring
+   "Produce a namestring according to DOS rules.
+
+- If the pathname is absolute:
+  - If the first directory component is :HOME, the
+    (USER-HOMEDIR-PATHNAME) is emitted.
+  - If the pathname has a device, the device name followed by a colon
+    and a backslash is emitted.
+  - Otherwise a backslash is emitted.
+- For every directory component, the component followed by a backslash
+  is emitted. In the case of :UP or :BACK, they are emitted as two
+  dots.
+- The pathname name, if any, is emitted
+- The pathname type, if any, is emitted following a dot.
+
+If the pathname contains illegal characters or components, a
+continuable error is signalled unless :JUNK-ALLOWED T is passed. If
+the error is continued or :JUNK-ALLOWED T is passed, the component or
+character is ignored. The following characters are illegal:
+  \\ / < > : \" | ? * Nul
+
+If STREAM is NIL, the namestring is printed to a string and returned.
+
+See NATIVE-NAMESTRING"))
