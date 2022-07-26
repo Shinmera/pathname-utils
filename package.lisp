@@ -51,4 +51,7 @@
    #:components
    #:parse-native-namestring
    #:parse-unix-namestring
-   #:parse-dos-namestring))
+   #:parse-dos-namestring
+   #:native-namestring
+   #:unix-namestring
+   #:dos-namestring))

@@ -432,3 +432,79 @@
                           (:directory (push-dir)))))
         (merge-pathnames (make-pathname :name name :type type :device device :directory (reverse directory))
                          base))))
+
+(defun native-namestring (pathname &key stream junk-allowed)
+  #+windows (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
+  #+unix (unix-namestring pathname :stream stream :junk-allowed unk-allowed)
+  #-(or windows unix) (write-string (namestring pathname) stream))
+
+(defun unix-namestring (pathname &key (stream) junk-allowed)
+  (etypecase stream
+    (null
+     (with-output-to-string (stream)
+       (unix-namestring pathname :stream stream :junk-allowed junk-allowed)))
+    (stream
+     (let ((dir (pathname-directory pathname)))
+       (cond ((and (eql :absolute (first dir))
+                   (eql :home (second dir)))
+              (unix-namestring (user-homedir-pathname) :stream stream)
+              (setf dir (cdr dir)))
+             ((eql :absolute (first dir))
+              (write-char #\/ stream)))
+       (loop for component in (rest dir)
+             do (cond ((find component '(:back :up))
+                       (write-string ".." stream))
+                      ((find component '(".." ".") :test #'string=)
+                       (unless junk-allowed
+                         (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
+                                 component pathname))
+                       (write-string component stream))
+                      (T (write-string component stream)))
+                (write-char #\/ stream)))
+     (when (pathname-name pathname)
+       (write-string (pathname-name pathname) stream))
+     (when (pathname-type pathname)
+       (write-char #\. stream)
+       (write-string (pathname-type pathname) stream))
+     stream)))
+
+(defun dos-namestring (pathname &key (stream) junk-allowed)
+  (etypecase stream
+    (null
+     (with-output-to-string (stream)
+       (dos-namestring pathname :stream stream :junk-allowed junk-allowed)))
+    (stream
+     (flet ((write-part (part)
+              (loop for char across part
+                    do (case char
+                         ((#\< #\> #\: #\" #\| #\? #\* #\\ #\/)
+                          (unless junk-allowed
+                            (cerror "Don't print the character." "Illegal character ~c in pathname:~%  ~a"
+                                    char pathname)))
+                         (T
+                          (write-char char stream))))))
+       (let ((dir (pathname-directory pathname)))
+         (cond ((and (eql :absolute (first dir))
+                     (eql :home (second dir)))
+                (dos-namestring (user-homedir-pathname) :stream stream)
+                (setf dir (cdr dir)))
+               ((eql :absolute (first dir))
+                (write-string (namestring (make-pathname :device (or (pathname-device pathname)
+                                                                     (pathname-device *default-pathname-defaults*))))
+                              stream)))
+         (loop for component in (rest dir)
+               do (cond ((find component '(:back :up))
+                         (write-string ".." stream))
+                        ((find component '(".." ".") :test #'string=)
+                         (unless junk-allowed
+                           (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
+                                   component pathname))
+                         (write-part component))
+                        (T (write-part component)))
+                  (write-char #\\ stream))
+         (when (pathname-name pathname)
+           (write-part (pathname-name pathname)))
+         (when (pathname-type pathname)
+           (write-char #\. stream)
+           (write-part (pathname-type pathname)))
+         stream)))))
