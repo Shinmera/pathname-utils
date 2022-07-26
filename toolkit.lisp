@@ -311,7 +311,7 @@
   #+windows (parse-dos-namestring namestring :as as :junk-allowed junk-allowed)
   #+unix (parse-unix-namestring namestring :as as :junk-allowed junk-allowed)
   #-(or windows unix)
-  (let ((path (parse-namestring namestring :junk-allowed junk-allowed)))
+  (let ((path (parse-namestring namestring NIL *default-pathname-defaults* :junk-allowed junk-allowed)))
     (if (and (eql :directory as)
              (or (pathname-name path) (pathname-type path)))
         (make-pathname :directory (append (pathname-directory path) (list (format NIL "~a~@[.~a~]" (pathname-name path) (pathname-type path)))))
@@ -352,7 +352,7 @@
                 finally (ecase as
                           (:file (push-file))
                           (:directory (push-dir)))))
-        (make-pathname :name name :type type :directory (reverse base)))))
+        (make-pathname :name name :type type :directory (unless (equal base '(:relative)) (reverse base))))))
 
 (defun getenv (x)
   (declare (ignorable x))
@@ -436,7 +436,7 @@
                 finally (ecase as
                           (:file (push-file))
                           (:directory (push-dir)))))
-        (merge-pathnames (make-pathname :name name :type type :device device :directory (reverse directory))
+        (merge-pathnames (make-pathname :name name :type type :device device :directory (unless (equal directory '(:relative)) (reverse directory)))
                          base))))
 
 (defun native-namestring (pathname &key stream junk-allowed)

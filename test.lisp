@@ -352,3 +352,58 @@
   #+unix (is equal "/" (directory-separator))
   #-(or windows unix)
   (skip "Directory separator not known on platforms other than windows or unix."))
+
+(define-test namestrings
+  :parent pathname-utils)
+
+(define-test parse-unix-namestring
+  :parent namestrings
+  (is equal #p"" (parse-unix-namestring ""))
+  (is equal #p"/" (parse-unix-namestring "/"))
+  (is equal #p"a" (parse-unix-namestring "a"))
+  (is equal "a" (pathname-name (parse-unix-namestring "a.b")))
+  (is equal "b" (pathname-type (parse-unix-namestring "a.b")))
+  (is equal "a.b" (pathname-name (parse-unix-namestring "a.b.c")))
+  (is equal "c" (pathname-type (parse-unix-namestring "a.b.c")))
+  (is equal #p "/a/b/c" (parse-unix-namestring "/a/b/c"))
+  (is equal #p "a/b/c" (parse-unix-namestring "a/b/c"))
+  (is equal (make-pathname :directory '(:absolute :home)) (parse-unix-namestring "~/")))
+
+(define-test parse-dos-namestring
+  :parent namestrings
+  (is equal #p"" (parse-dos-namestring ""))
+  (is equal #p"/" (parse-dos-namestring "/"))
+  (is equal #p"/" (parse-dos-namestring "\\"))
+  (is equal #p"a" (parse-dos-namestring "a"))
+  (is equal "a" (pathname-name (parse-dos-namestring "a.b")))
+  (is equal "b" (pathname-type (parse-dos-namestring "a.b")))
+  (is equal "a.b" (pathname-name (parse-dos-namestring "a.b.c")))
+  (is equal "c" (pathname-type (parse-dos-namestring "a.b.c")))
+  (is equal #p "/a/b/c" (parse-dos-namestring "/a/b/c"))
+  (is equal #p "a/b/c" (parse-dos-namestring "a/b/c"))
+  (is equal #p "/a/b/c" (parse-dos-namestring "\\a\\b\\c"))
+  (is equal #p "a/b/c" (parse-dos-namestring "a\\b\\c"))
+  #+windows (is equal #p "C:/a/b/c" (parse-dos-namestring "C:\\a\\b\\c"))
+  #+windows (is equal (user-homedir-pathname) (parse-dos-namestring "%UserProfile%/")))
+
+(define-test unix-namestring
+  :parent namestrings
+  (is equal "" (unix-namestring #p""))
+  (is equal "/" (unix-namestring #p"/"))
+  (is equal "a" (unix-namestring #p"a"))
+  (is equal "a.b" (unix-namestring (make-pathname :name "a" :type "b")))
+  (is equal "~/" (unix-namestring (make-pathname :directory '(:absolute :home))))
+  (is equal "/a/b" (unix-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
+  (is equal "a/b" (unix-namestring (make-pathname :name "b" :directory '(:relative "a")))))
+
+(define-test dos-namestring
+  :parent namestrings
+  (is equal "" (dos-namestring #p""))
+  (is equal "\\" (dos-namestring #p"/"))
+  (is equal "a" (dos-namestring #p"a"))
+  (is equal "a.b" (dos-namestring (make-pathname :name "a" :type "b")))
+  (is equal (dos-namestring (user-homedir-pathname)) (dos-namestring (make-pathname :directory '(:absolute :home))))
+  (is equal "\\a\\b" (dos-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
+  (is equal "a\\b" (dos-namestring (make-pathname :name "b" :directory '(:relative "a"))))
+  (is equal "c:\\" (dos-namestring (make-pathname :device "c" :directory '(:absolute))))
+  (is equal "a\\" (dos-namestring (make-pathname :device "c" :directory '(:relative "a")))))

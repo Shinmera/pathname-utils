@@ -17,5 +17,5 @@
   :components ((:file "package")
                (:file "toolkit")
                (:file "documentation"))
-  :depends-on ()
+  :depends-on (:trivial-features)
   :in-order-to ((asdf:test-op (asdf:test-op :pathname-utils-test))))
