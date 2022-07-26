@@ -230,7 +230,7 @@ The given pathname is coerced using PATHNAME*
 
 See PATHNAME*")
 
-  (to-relative
+  (to-absolute
    "Turns the pathname into an absolute pathname.
 
 The given pathname is coerced using PATHNAME*
