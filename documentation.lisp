@@ -340,13 +340,20 @@ of FILE, but the rest of DIR.")
 
 This is different from PATHNAME-TYPE in the following manner:
 If PATHNAME-TYPE is specific, but contains a dot, only the part
-after the dot is used as it would indicate the actual file-type
+after the last dot is used as it would indicate the actual file-type
 on any recent system. If PATHNAME-TYPE is unspecific, the
-PATHNAME-NAME is specific, and it contains a dot, then that last
-part is used instead. Otherwise NIL is returned.")
+PATHNAME-NAME is specific, and it contains a dot in any position but
+the first, then that last part is used instead. Otherwise NIL is
+returned.
+
+If the pathname is wild in its type or name component, an error is
+signalled.")
   
   (file-name
-   "Returns the complete file name as it would be used by the OS, if any.")
+   "Returns the complete file name as it would be used by the OS, if any.
+
+If the pathname is wild in its name or type component, an error is
+signalled.")
   
   (directory-name
    "Returns the name of the topmost directory in the pathname, if any.

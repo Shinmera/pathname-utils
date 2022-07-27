@@ -281,7 +281,7 @@
                (if pos (subseq name (1+ pos)) NIL)))
             (T
              (let ((pos (position #\. type :from-end T)))
-               (if pos (subseq type (1+ pos)) type)))))))
+               (if (and pos (< 0 pos)) (subseq type (1+ pos)) type)))))))
 
 (defun file-name (pathname)
   (let ((pathname (pathname pathname)))
