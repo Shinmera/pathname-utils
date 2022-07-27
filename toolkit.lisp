@@ -272,6 +272,8 @@
 
 (defun file-type (pathname)
   (let ((pathname (pathname pathname)))
+    (when (wild-pathname-p (make-pathname :name (pathname-name pathname) :type (pathname-type pathname)))
+      (error "Cannot produce a concrete file-type for a wild pathname:~%  ~s" pathname))
     (let ((type (pathname-type pathname))
           (name (pathname-name pathname)))
       (cond ((unspecific-p type)
@@ -283,6 +285,8 @@
 
 (defun file-name (pathname)
   (let ((pathname (pathname pathname)))
+    (when (wild-pathname-p (make-pathname :name (pathname-name pathname) :type (pathname-type pathname)))
+      (error "Cannot produce a concrete file-name for a wild pathname:~%  ~s" pathname))
     (if (directory-p pathname)
         NIL
         (format NIL "~a~@[.~a~]" (pathname-name pathname) (pathname-type pathname)))))
