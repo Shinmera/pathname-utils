@@ -36,6 +36,7 @@
    #:to-file
    #:to-relative
    #:to-absolute
+   #:force-directory
    #:subdirectory
    #:pop-directory
    #:parent

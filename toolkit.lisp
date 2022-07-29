@@ -180,6 +180,13 @@
     (make-pathname :directory (list* :absolute (rest (pathname-directory pathname)))
                    :defaults pathname)))
 
+(defun force-directory (pathname)
+  (let ((pathname (pathname* pathname)))
+    (make-pathname :directory (append (or (normalize-directory-spec (pathname-directory pathname))
+                                          (list :relative))
+                                      (list (file-namestring pathname)))
+                   :name NIL :type NIL :version NIL :defaults pathname)))
+
 (defun subdirectory (pathname &rest subdirs)
   (let* ((base (to-directory pathname))
          (basedir (or (pathname-directory base) '(:relative)))

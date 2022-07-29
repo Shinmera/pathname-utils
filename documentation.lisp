@@ -213,7 +213,8 @@ If the argument is :HOME, it is turned into an absolute pathname
 pointing to the home directory.
 Otherwise the pathname is coerced using PATHNAME*
 
-See PATHNAME*")
+See PATHNAME*
+See FORCE-DIRECTORY")
 
   (to-file
    "Turns the pathname into a file pathname.
@@ -236,6 +237,16 @@ See PATHNAME*")
 The given pathname is coerced using PATHNAME*
 
 See PATHNAME*")
+
+  (force-directory
+   "Forces the pathname into a directory, including its file namestring.
+
+Meaning: #p\"a\" => #p\"a/\"
+
+The pathname is first coerced using PATHNAME*
+
+See PATHNAME*
+See TO-DIRECTORY")
   
   (subdirectory
    "Returns a directory-pathname with the given subdirectories appended.
