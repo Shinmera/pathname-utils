@@ -18,6 +18,13 @@
                                         :name NIL :type NIL :version NIL))
 (defvar *wild-path* (merge-pathnames *wild-file* *wild-directory*))
 
+(declaim (inline unspecific-p))
+(defun unspecific-p (component)
+  (or (eq component NIL)
+      (eq component :unspecific)
+      (and (stringp component)
+           (= 0 (length component)))))
+
 (defun clean-directory-spec (dir)
   (when dir
     (let ((parts ()))
@@ -66,12 +73,6 @@
   (typecase pathname
     (pathname pathname)
     (T (normalize-pathname pathname))))
-
-(defun unspecific-p (component)
-  (or (eq component NIL)
-      (eq component :unspecific)
-      (and (stringp component)
-           (= 0 (length component)))))
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))
