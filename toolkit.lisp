@@ -481,7 +481,7 @@
        (let ((dir (pathname-directory pathname)))
          (cond ((and (eql :absolute (first dir))
                      (eql :home (second dir)))
-                (write-string "~/" stream)
+                (unix-namestring (user-homedir-pathname) :stream stream)
                 (setf dir (cdr dir)))
                ((eql :absolute (first dir))
                 (write-char #\/ stream)))
