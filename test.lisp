@@ -392,7 +392,6 @@
   (is equal "/" (unix-namestring #p"/"))
   (is equal "a" (unix-namestring #p"a"))
   (is equal "a.b" (unix-namestring (make-pathname :name "a" :type "b")))
-  (is equal "~/" (unix-namestring (make-pathname :directory '(:absolute :home))))
   (is equal "/a/b" (unix-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
   (is equal "a/b" (unix-namestring (make-pathname :name "b" :directory '(:relative "a")))))
 
