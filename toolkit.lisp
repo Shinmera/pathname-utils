@@ -25,7 +25,7 @@
       (and (stringp component)
            (= 0 (length component)))))
 
-(defun clean-directory-spec (dir)
+(defun clean-directory-spec (dir &key resolve-home)
   (when dir
     (let ((parts ()))
       (loop with back = 0
@@ -38,11 +38,15 @@
                  ((< 0 back) (decf back))
                  (T (push el parts)))
             finally (case el
-                      (:home (loop repeat back do (push :up parts)) (push :home parts))
+                      (:home (loop repeat back do (push :up parts))
+                       (if resolve-home
+                           (loop for dir in (reverse (rest (pathname-directory (user-homedir-pathname))))
+                                 do (push dir parts))
+                           (push :home parts)))
                       (:relative (loop repeat back do (push :up parts)))))
       (list* (car dir) parts))))
 
-(defun normalize-directory-spec (dir)
+(defun normalize-directory-spec (dir &key resolve-home)
   (clean-directory-spec
    (etypecase dir
      (string `(:absolute ,dir))
@@ -53,9 +57,10 @@
           #+gcl `(:relative ,dir)
           #-gcl (error "Invalid directory component ~s" dir)))
      (T (unless (unspecific-p dir)
-          dir)))))
+          dir)))
+   :resolve-home resolve-home))
 
-(defun normalize-pathname (pathname)
+(defun normalize-pathname (pathname &key resolve-home)
   (let ((pathname (pathname pathname)))
     (flet ((maybe-component (component)
              (let ((value (funcall component pathname)))
@@ -66,7 +71,7 @@
        :name (maybe-component #'pathname-name)
        :type (maybe-component #'pathname-type)
        :version (maybe-component #'pathname-version)
-       :directory (normalize-directory-spec (pathname-directory pathname))
+       :directory (normalize-directory-spec (pathname-directory pathname) :resolve-home resolve-home)
        :defaults pathname))))
 
 (defun pathname* (pathname)
@@ -259,14 +264,14 @@
   (pathname* (enough-namestring subpath base)))
 
 (defun relative-pathname (from to)
-  (let ((from (normalize-pathname (merge-pathnames (to-directory from))))
-        (to (normalize-pathname (merge-pathnames to))))
+  (let ((from (normalize-pathname (merge-pathnames (to-directory from)) :resolve-home T))
+        (to (normalize-pathname (merge-pathnames to) :resolve-home T)))
     (unless (equal (pathname-host from) (pathname-host to))
       (error "Cannot relativise pathnames across hosts."))
     (unless (equal (pathname-device from) (pathname-device to))
       (error "Cannot relativise pathnames across devices."))
-    (let ((from-dir (copy-list (pathname-directory from)))
-          (to-dir (copy-list (pathname-directory to)))
+    (let ((from-dir (pathname-directory from))
+          (to-dir (pathname-directory to))
           (final-dir (list :relative)))
       (loop for a = (car from-dir)
             for b = (car to-dir)

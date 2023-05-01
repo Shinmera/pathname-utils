@@ -50,7 +50,11 @@
 Specifically, if the encountered part is UNSPECIFIC or the
 string \".\", it is omitted. If the part is :BACK, the
 preceding component is omitted if possible. If not possible,
-an equivalent amount of :UP specs are inserted instead.")
+an equivalent amount of :UP specs are inserted instead.
+
+If RESOLVE-HOME is T then the :HOME part, if present, is
+replaced by the actual directory components of
+USER-HOMEDIR-PATHNAME")
   
   (normalize-directory-spec
    "Attempts to normalize the directory specification into one as specified by CLHS.
