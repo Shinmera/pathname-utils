@@ -507,6 +507,12 @@ the error is continued or :JUNK-ALLOWED T is passed, the component or
 character is ignored. The following characters are illegal:
   / Nul
 
+Any component that isn't one of the following is considered illegal:
+  :BACK :UP :WILD :WILD-INFERIORS :UNSPECIFIC :HOME NIL string
+As the representation is implementation-internal. A wild component is
+outputted using \"glob\" syntax, meaning :WILD becomes * and
+:WILD-INFERIORS becomes ** .
+
 If STREAM is NIL, the namestring is printed to a string and returned.
 
 See NATIVE-NAMESTRING")
@@ -531,6 +537,11 @@ continuable error is signalled unless :JUNK-ALLOWED T is passed. If
 the error is continued or :JUNK-ALLOWED T is passed, the component or
 character is ignored. The following characters are illegal:
   \\ / < > : \" | ? * Nul
+
+Any component that isn't one of the following is considered illegal:
+  :BACK :UP :UNSPECIFIC :HOME NIL string
+As the representation is implementation-internal and DOS has no syntax
+for wild pathname patterns.
 
 If STREAM is NIL, the namestring is printed to a string and returned.
 

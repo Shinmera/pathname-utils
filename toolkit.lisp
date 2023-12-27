@@ -478,7 +478,8 @@
                                     char pathname)))
                          (T
                           (write-char char stream))))))
-       (let ((dir (pathname-directory pathname)))
+       (let* ((pathname (normalize-pathname pathname))
+              (dir (pathname-directory pathname)))
          (cond ((and (eql :absolute (first dir))
                      (eql :home (second dir)))
                 (unix-namestring (user-homedir-pathname) :stream stream)
@@ -486,21 +487,45 @@
                ((eql :absolute (first dir))
                 (write-char #\/ stream)))
          (loop for component in (rest dir)
-               do (cond ((find component '(:back :up))
-                         (write-part ".."))
-                        ((find component '(".." ".") :test #'string=)
-                         (unless junk-allowed
-                           (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
-                                   component pathname))
-                         (write-part component))
-                        (T (write-part component)))
-                  (write-char #\/ stream)))
-       (when (pathname-name pathname)
-         (write-part (pathname-name pathname)))
-       (when (pathname-type pathname)
-         (write-char #\. stream)
-         (write-part (pathname-type pathname))))
-     stream)))
+               do (typecase component
+                    ((member :back :up)
+                     (write-part ".."))
+                    ((eql :wild)
+                     (write-string "*" stream))
+                    ((eql :wild-inferiors)
+                     (write-string "**" stream))
+                    (string
+                     (when (find component '(".." ".") :test #'string=)
+                       (unless junk-allowed
+                         (cerror "Print the component anyway" "Illegal directory ~s in pathname:~%  ~a"
+                                 component pathname)))
+                     (write-part component))
+                    (T
+                     (cerror "Omit the component" "Illegal directory ~s in pathname:~%  ~a"
+                             component pathname)))
+                  (write-char #\/ stream))
+         (typecase (pathname-name pathname)
+           (null)
+           ((eql :wild)
+            (write-string "*" stream))
+           (string
+            (write-part (pathname-name pathname)))
+           (T
+            (unless junk-allowed
+              (cerror "Omit the component" "Illegal name ~s in pathname:~%  ~a"
+                      (pathname-name pathname) pathname))))
+         (typecase (pathname-type pathname)
+           (null)
+           ((eql :wild)
+            (write-string ".*" stream))
+           (string
+            (write-char #\. stream)
+            (write-part (pathname-type pathname)))
+           (T
+            (unless junk-allowed
+              (cerror "Omit the component" "Illegal name ~s in pathname:~%  ~a"
+                      (pathname-name pathname) pathname))))
+         stream)))))
 
 (defun dos-namestring (pathname &key (stream) junk-allowed)
   (etypecase stream
@@ -517,7 +542,8 @@
                                     char pathname)))
                          (T
                           (write-char char stream))))))
-       (let ((dir (pathname-directory pathname)))
+       (let* ((pathname (normalize-pathname pathname))
+              (dir (pathname-directory pathname)))
          (cond ((and (eql :absolute (first dir))
                      (eql :home (second dir)))
                 (dos-namestring (user-homedir-pathname) :stream stream)
@@ -537,9 +563,21 @@
                          (write-part component))
                         (T (write-part component)))
                   (write-char #\\ stream))
-         (when (pathname-name pathname)
-           (write-part (pathname-name pathname)))
-         (when (pathname-type pathname)
-           (write-char #\. stream)
-           (write-part (pathname-type pathname)))
+         (typecase (pathname-name pathname)
+           (null)
+           (string
+            (write-part (pathname-name pathname)))
+           (T
+            (unless junk-allowed
+              (cerror "Omit the component" "Illegal name ~s in pathname:~%  ~a"
+                      (pathname-name pathname) pathname))))
+         (typecase (pathname-type pathname)
+           (null)
+           (string
+            (write-char #\. stream)
+            (write-part (pathname-type pathname)))
+           (T
+            (unless junk-allowed
+              (cerror "Omit the component" "Illegal name ~s in pathname:~%  ~a"
+                      (pathname-name pathname) pathname))))
          stream)))))

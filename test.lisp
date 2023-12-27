@@ -377,7 +377,7 @@
   (is equal #p "a/b/c" (parse-dos-namestring "a/b/c"))
   (is equal #p "/a/b/c" (parse-dos-namestring "\\a\\b\\c"))
   (is equal #p "a/b/c" (parse-dos-namestring "a\\b\\c"))
-  #+windows (is equal #p "C:/a/b/c" (parse-dos-namestring "C:\\a\\b\\c"))
+  #+windows (is equal #p"C:/a/b/c" (parse-dos-namestring "C:\\a\\b\\c"))
   #+windows (is equal (user-homedir-pathname) (parse-dos-namestring "%UserProfile%/")))
 
 (define-test unix-namestring
@@ -387,7 +387,10 @@
   (is equal "a" (unix-namestring #p"a"))
   (is equal "a.b" (unix-namestring (make-pathname :name "a" :type "b")))
   (is equal "/a/b" (unix-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
-  (is equal "a/b" (unix-namestring (make-pathname :name "b" :directory '(:relative "a")))))
+  (is equal "a/b" (unix-namestring (make-pathname :name "b" :directory '(:relative "a"))))
+  (is equal "" (unix-namestring (make-pathname :name :unspecific)))
+  (is equal "*" (unix-namestring (make-pathname :name :wild)))
+  (is equal "**/" (unix-namestring (make-pathname :directory '(:relative :wild-inferiors)))))
 
 (define-test dos-namestring
   :parent namestrings
@@ -399,4 +402,6 @@
   (is equal "\\a\\b" (dos-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
   (is equal "a\\b" (dos-namestring (make-pathname :name "b" :directory '(:relative "a"))))
   (is equal "c:\\" (dos-namestring (make-pathname :device "c" :directory '(:absolute))))
-  (is equal "a\\" (dos-namestring (make-pathname :device "c" :directory '(:relative "a")))))
+  (is equal "a\\" (dos-namestring (make-pathname :device "c" :directory '(:relative "a"))))
+  (is equal "" (dos-namestring (make-pathname :name :unspecific)))
+  (fail (dos-namestring (make-pathname :name :wild))))
