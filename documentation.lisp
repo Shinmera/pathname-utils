@@ -172,7 +172,9 @@ component of the pathnames is not compared. This is useful, as it
 can be different for pathnames that appear to be the same on some
 implementations.
 
-See UNSPECIFIC-P")
+See UNSPECIFIC-P
+See PATHNAME-EQUAL
+See PATHNAME-MATCHES-P")
 
   (pathname-equal
    "Returns T if the two pathnames denote the same file.
@@ -188,6 +190,27 @@ the same due to symbolic links or similar effects in the file
 system.
 
 See CL:TRUENAME
+See PATHNAME=
+See PATHNAME-MATCHES-P")
+
+  (pathname-component-matches-p
+   "Returns T if the pathname component matches the pathname component pattern.
+
+This properly handles wild fields in the pattern. An unspecific
+component in the pattern is treated the same as a wild component. On
+SBCL it also handles pathname pattern components.")
+
+  (pathname-matches-p
+   "Returns T if the given pathname matches the wild pathname pattern.
+
+The pathnames must both be absolute, or both relative.
+The pathname must not be wild.
+
+This properly handles wild fields and wild inferiors in the pattern.
+An unspecific component in the pattern is treated the same as a wild
+component. On SBCL it also handles pathname pattern components.
+
+See PATHNAME-COMPONENT-MATCHES-P
 See PATHNAME=")
   
   (to-root

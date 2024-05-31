@@ -174,6 +174,38 @@
   :depends-on (pathname=)
   (skip "Cannot test pathname-equal as there are no reliable symlinks to test against."))
 
+(define-test pathname-component-matches-p
+  :parent predicates
+  (true (pathname-component-matches-p "a" "a"))
+  (false (pathname-component-matches-p "a" "b"))
+  (true (pathname-component-matches-p "a" :unspecific))
+  (true (pathname-component-matches-p "a" *wild-component*))
+  (false (pathname-component-matches-p :unspecific "a"))
+  (false (pathname-component-matches-p NIL "a"))
+  (true (pathname-component-matches-p :unspecific NIL)))
+
+(define-test pathname-matches-p
+  :parent predicates
+  :depends-on (pathname-component-matches-p)
+  (fail (pathname-matches-p #p"/a/b" #p"a/b"))
+  (fail (pathname-matches-p #p"a/b" #p"/a/b"))
+  (fail (pathname-matches-p #p"a/*" #p"/a/b"))
+  (fail (pathname-matches-p #p"*/b" #p"/a/b"))
+  (true (pathname-matches-p #p"/a/b" #p"/a/b"))
+  (true (pathname-matches-p #p"a/b" #p"a/b"))
+  (false (pathname-matches-p #p"a/b" #p"a/c"))
+  (true (pathname-matches-p #p"a/b" #p"a/*"))
+  (false (pathname-matches-p #p"b/b" #p"a/*"))
+  (true (pathname-matches-p #p"b/a" #p"*/a"))
+  (false (pathname-matches-p #p"b/b" #p"*/a"))
+  (true (pathname-matches-p #p"b/b" #p"*/*"))
+  (true (pathname-matches-p #p"a/b/c/d" #p"**/d"))
+  (true (pathname-matches-p #p"a/b/c/d" #p"**/**/d"))
+  (true (pathname-matches-p #p"a/b/c/d" #p"**/b/**/d"))
+  (false (pathname-matches-p #p"a/b/c/d" #p"**/e"))
+  (false (pathname-matches-p #p"a/b/c/d" #p"**/e/d"))
+  (false (pathname-matches-p #p"a/b/c/d" #p"**/e/**/d")))
+
 (define-test coercion
   :parent pathname-utils
   :depends-on (predicates))

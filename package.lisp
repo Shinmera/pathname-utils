@@ -24,6 +24,8 @@
    #:subpath-p
    #:pathname=
    #:pathname-equal
+   #:pathname-component-matches-p
+   #:pathname-matches-p
    #:to-root
    #:to-physical
    #:to-directory
