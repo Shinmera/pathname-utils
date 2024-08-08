@@ -503,8 +503,8 @@
                          base))))
 
 (defun native-namestring (pathname &key stream junk-allowed)
-  #+(or windows nx) (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
-  #+unix (unix-namestring pathname :stream stream :junk-allowed junk-allowed)
+  #+windows (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
+  #+(or nx unix) (unix-namestring pathname :stream stream :junk-allowed junk-allowed)
   #-(or windows nx unix) (write-string (namestring pathname) stream))
 
 (defun unix-namestring (pathname &key (stream) junk-allowed)
@@ -529,7 +529,12 @@
                 (unix-namestring (user-homedir-pathname) :stream stream)
                 (setf dir (cdr dir)))
                ((eql :absolute (first dir))
-                (write-char #\/ stream)))
+                #+nx
+                (typecase (pathname-device pathname)
+                  (null (write-string "/" stream))
+                  (string (format stream "~a:/" (pathname-device pathname)))
+                  (T (write-string (namestring (make-pathname :device (pathname-device pathname))) stream)))
+                #-nx (write-char #\/ stream)))
          (loop for component in (rest dir)
                do (typecase component
                     ((member :back :up)
