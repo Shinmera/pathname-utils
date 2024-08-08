@@ -368,9 +368,9 @@
      :directory (pathname-directory pathname))))
 
 (defun parse-native-namestring (namestring &key (as :file) junk-allowed)
-  #+windows (parse-dos-namestring namestring :as as :junk-allowed junk-allowed)
+  #+(or windows nx) (parse-dos-namestring namestring :as as :junk-allowed junk-allowed)
   #+unix (parse-unix-namestring namestring :as as :junk-allowed junk-allowed)
-  #-(or windows unix)
+  #-(or windows nx unix)
   (let ((path (parse-namestring namestring NIL *default-pathname-defaults* :junk-allowed junk-allowed)))
     (if (and (eql :directory as)
              (or (pathname-name path) (pathname-type path)))
@@ -500,9 +500,9 @@
                          base))))
 
 (defun native-namestring (pathname &key stream junk-allowed)
-  #+windows (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
+  #+(or windows nx) (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
   #+unix (unix-namestring pathname :stream stream :junk-allowed junk-allowed)
-  #-(or windows unix) (write-string (namestring pathname) stream))
+  #-(or windows nx unix) (write-string (namestring pathname) stream))
 
 (defun unix-namestring (pathname &key (stream) junk-allowed)
   (etypecase stream
