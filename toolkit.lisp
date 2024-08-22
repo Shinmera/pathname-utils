@@ -141,8 +141,8 @@
     (error "Cannot compare subpathness for a relative pathname root."))
   (let* ((subpath (normalize-pathname subpath))
          (base (normalize-pathname base))
-         (subspec (cdr (pathname-directory (merge-pathnames subpath root))))
-         (basespec (cdr (pathname-directory (merge-pathnames base root)))))
+         (subspec (cdr (pathname-directory (merge-pathnames* subpath root))))
+         (basespec (cdr (pathname-directory (merge-pathnames* base root)))))
     (if (and (equal (pathname-host subpath) (pathname-host base))
              (equal (pathname-device subpath) (pathname-device base))
              (or (null (pathname-name base))
@@ -317,8 +317,8 @@
   (pathname* (enough-namestring subpath base)))
 
 (defun relative-pathname (from to)
-  (let ((from (normalize-pathname (merge-pathnames (to-directory from)) :resolve-home T))
-        (to (normalize-pathname (merge-pathnames to) :resolve-home T)))
+  (let ((from (normalize-pathname (merge-pathnames* (to-directory from)) :resolve-home T))
+        (to (normalize-pathname (merge-pathnames* to) :resolve-home T)))
     (unless (equal (pathname-host from) (pathname-host to))
       (error "Cannot relativise pathnames across hosts."))
     (unless (equal (pathname-device from) (pathname-device to))
@@ -517,8 +517,8 @@
                 finally (ecase as
                           (:file (push-file))
                           (:directory (push-dir)))))
-        (merge-pathnames (make-pathname :name name :type type :device device :directory (unless (equal directory '(:relative)) (reverse directory)))
-                         base))))
+        (merge-pathnames* (make-pathname :name name :type type :device device :directory (unless (equal directory '(:relative)) (reverse directory)))
+                          base))))
 
 (defun native-namestring (pathname &key stream junk-allowed)
   #+windows (dos-namestring pathname :stream stream :junk-allowed junk-allowed)
