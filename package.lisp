@@ -13,6 +13,7 @@
    #:normalize-directory-spec
    #:normalize-pathname
    #:pathname*
+   #:merge-pathnames*
    #:unspecific-p
    #:relative-p
    #:absolute-p

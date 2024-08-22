@@ -19,6 +19,11 @@
       (and (stringp component)
            (= 0 (length component)))))
 
+(defun unspec (component)
+  (if (unspecific-p component)
+      NIL
+      component))
+
 (defun clean-directory-spec (dir &key resolve-home)
   (when dir
     (let ((parts ()))
@@ -56,22 +61,35 @@
 
 (defun normalize-pathname (pathname &key resolve-home)
   (let ((pathname (pathname pathname)))
-    (flet ((maybe-component (component)
-             (let ((value (funcall component pathname)))
-               (if (unspecific-p value) NIL value))))
-      (make-pathname
-       :host (maybe-component #'pathname-host)
-       :device (maybe-component #'pathname-device)
-       :name (maybe-component #'pathname-name)
-       :type (maybe-component #'pathname-type)
-       :version (maybe-component #'pathname-version)
-       :directory (normalize-directory-spec (pathname-directory pathname) :resolve-home resolve-home)
-       :defaults pathname))))
+    (make-pathname
+     :host (unspec (pathname-host pathname))
+     :device (unspec (pathname-device pathname))
+     :name (unspec (pathname-name pathname))
+     :type (unspec (pathname-type pathname))
+     :version (unspec (pathname-version pathname))
+     :directory (normalize-directory-spec (pathname-directory pathname) :resolve-home resolve-home)
+     :defaults pathname)))
 
 (defun pathname* (pathname)
   (typecase pathname
     (pathname pathname)
     (T (normalize-pathname pathname))))
+
+(defun merge-pathnames* (source base)
+  (make-pathname :host (pathname-host base)
+                 :device (or (unspec (pathname-device source))
+                             (unspec (pathname-device base)))
+                 :name (or (unspec (pathname-name source))
+                           (unspec (pathname-name base)))
+                 :type (or (unspec (pathname-type source))
+                           (unspec (pathname-type base)))
+                 :version (or (unspec (pathname-version source))
+                              (unspec (pathname-version base)))
+                 :directory (let ((source (unspec (pathname-directory source)))
+                                  (base (unspec (pathname-directory base))))
+                              (if (eql :absolute (first source))
+                                  source
+                                  (append base (rest source))))))
 
 (defun relative-p (pathname)
   (let ((pathname (pathname* pathname)))

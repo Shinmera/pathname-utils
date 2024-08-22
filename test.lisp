@@ -82,6 +82,15 @@
   (is equal (normalize-pathname "a/b/c") (pathname* "a/b/c"))
   (is equal (normalize-pathname "a/b/*") (pathname* "a/b/*")))
 
+(define-test merge-pathnames*
+  :parent normalization
+  :depends-on (normalize-pathname)
+  (is equal #p"c/d/a/b/" (merge-pathnames* "a/b/" "c/d/"))
+  (is equal #p"/a/b/" (merge-pathnames* "/a/b/" "c/d/"))
+  (is equal #p"c/d/a/b" (merge-pathnames* "a/b" "c/d/"))
+  (is equal #p"c/a/b" (merge-pathnames* "a/b" "c/d"))
+  (is equal #p"c/a/b/d" (merge-pathnames* "a/b/" "c/d")))
+
 (define-test predicates
   :parent pathname-utils)
 

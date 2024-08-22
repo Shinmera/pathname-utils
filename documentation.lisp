@@ -77,6 +77,16 @@ If it is anything else, the value is coerced to a pathname using
 NORMALIZE-PATHNAME.
 
 See NORMALIZE-PATHNAME")
+
+  (merge-pathnames*
+   "Merges the two pathnames together.
+
+This works like CL:MERGE-PATHNAMES, but with the following changes:
+
+- All kinds of unspecific components are treated as NIL
+- The pathname-host of the BASE is always used
+
+See UNSPECIFIC-P")
   
   (unspecific-p
    "Returns true if the given component is unspecific.
