@@ -371,7 +371,7 @@
 
 (defun directory-separator (&optional (pathname *default-pathname-defaults*))
   #+windows "\\"
-  #+(or nx unx) "/"
+  #+(or nx unix) "/"
   #-(or windows nx unix)
   (let ((name (namestring (make-pathname :directory '(:absolute "nowhere") :defaults pathname))))
     (subseq name (+ (search "nowhere" name) (length "nowhere")))))
