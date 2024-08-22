@@ -89,7 +89,8 @@
   (is equal #p"/a/b/" (merge-pathnames* "/a/b/" "c/d/"))
   (is equal #p"c/d/a/b" (merge-pathnames* "a/b" "c/d/"))
   (is equal #p"c/a/b" (merge-pathnames* "a/b" "c/d"))
-  (is equal #p"c/a/b/d" (merge-pathnames* "a/b/" "c/d")))
+  (is equal #p"c/a/b/d" (merge-pathnames* "a/b/" "c/d"))
+  (is equal #p"a/b/c" (merge-pathnames* "a/b/c" "")))
 
 (define-test predicates
   :parent pathname-utils)
