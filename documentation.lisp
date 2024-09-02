@@ -45,6 +45,8 @@ Specifically, if the encountered part is UNSPECIFIC or the
 string \".\", it is omitted. If the part is :BACK, the
 preceding component is omitted if possible. If not possible,
 an equivalent amount of :UP specs are inserted instead.
+If UP-AS-BACK is T then :UP is treated the same as :BACK,
+otherwise :UP elements are not removed from the spec.
 
 If RESOLVE-HOME is T then the :HOME part, if present, is
 replaced by the actual directory components of
@@ -55,7 +57,7 @@ USER-HOMEDIR-PATHNAME")
 
 Also cleans the directory spec.
 
-See CLEAN-DIRECTORY-SPEC.")
+See CLEAN-DIRECTORY-SPEC")
   
   (normalize-pathname
    "Returns a normalised form of the given pathname.

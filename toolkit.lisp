@@ -24,9 +24,11 @@
       NIL
       component))
 
-(defun clean-directory-spec (dir &key resolve-home)
+(defun clean-directory-spec (dir &key resolve-home up-as-back)
   (when dir
     (let ((parts ()))
+      (when (and (eql :home (second dir)) resolve-home)
+        (setf dir (append (pathname-directory (user-homedir-pathname)) (cddr dir))))
       (loop with back = 0
             for el in (reverse dir)
             until (find el '(:absolute :relative :home))
@@ -34,18 +36,18 @@
                  ((unspecific-p el))
                  ((equal el "."))
                  ((eql el :back) (incf back))
+                 ((and (eql el :up) up-as-back) (incf back))
                  ((< 0 back) (decf back))
                  (T (push el parts)))
             finally (case el
-                      (:home (loop repeat back do (push :up parts))
-                       (if resolve-home
-                           (loop for dir in (reverse (rest (pathname-directory (user-homedir-pathname))))
-                                 do (push dir parts))
-                           (push :home parts)))
-                      (:relative (loop repeat back do (push :up parts)))))
+                      (:home
+                       (loop repeat back do (push :up parts))
+                       (push :home parts))
+                      (:relative
+                       (loop repeat back do (push :up parts)))))
       (list* (car dir) parts))))
 
-(defun normalize-directory-spec (dir &key resolve-home)
+(defun normalize-directory-spec (dir &key resolve-home up-as-back)
   (clean-directory-spec
    (etypecase dir
      (string `(:absolute ,dir))
@@ -57,9 +59,10 @@
           #-gcl (error "Invalid directory component ~s" dir)))
      (T (unless (unspecific-p dir)
           dir)))
+   :up-as-back up-as-back
    :resolve-home resolve-home))
 
-(defun normalize-pathname (pathname &key resolve-home)
+(defun normalize-pathname (pathname &key resolve-home up-as-back)
   (let ((pathname (pathname pathname)))
     (make-pathname
      :host (unspec (pathname-host pathname))
@@ -67,7 +70,9 @@
      :name (unspec (pathname-name pathname))
      :type (unspec (pathname-type pathname))
      :version (unspec (pathname-version pathname))
-     :directory (normalize-directory-spec (pathname-directory pathname) :resolve-home resolve-home)
+     :directory (normalize-directory-spec (pathname-directory pathname)
+                                          :resolve-home resolve-home
+                                          :up-as-back up-as-back)
      :defaults pathname)))
 
 (defun pathname* (pathname)
