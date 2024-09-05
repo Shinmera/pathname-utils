@@ -273,51 +273,55 @@
      :directory (append basedir subdir)
      :defaults base)))
 
-(defun pop-directory (pathname)
+(defun pop-directory (pathname &optional (count 1))
   (let* ((pathname (pathname* pathname))
          (directory (pathname-directory pathname)))
     (make-pathname :directory (when directory
-                                (list* (car directory) (butlast (cdr directory))))
+                                (list* (car directory) (butlast (cdr directory) count)))
                    :defaults pathname)))
 
-(defun parent (pathname)
+(defun parent (pathname &optional (count 1))
   (let ((pathname (pathname* pathname)))
-    (cond ((directory-p pathname)
-           (let ((dir (pathname-directory pathname)))
-             (if (root-p pathname)
-                 pathname
-                 (let ((dir (typecase (car (last (cdr dir)))
-                              (null (list :relative :up))
-                              (string (list* (car dir) (butlast (cdr dir))))
-                              (T (append dir '(:up))))))
-                   (make-pathname
-                    :directory (unless (equal '(:relative) dir)
-                                 dir)
-                    :defaults pathname)))))
+    (cond ((= count 0)
+           pathname)
+          ((not (directory-p pathname))
+           (parent (to-directory pathname) (1- count)))
+          ((root-p pathname)
+           pathname)
           (T
-           (to-directory pathname)))))
+           (let* ((dir (pathname-directory pathname))
+                  (dir (typecase (car (last (cdr dir)))
+                         (null (list :relative :up))
+                         (string (list* (car dir) (butlast (cdr dir) count)))
+                         (T (append dir (make-list count :initial-element :up))))))
+             (make-pathname
+              :directory (unless (equal '(:relative) dir)
+                           dir)
+              :defaults pathname))))))
 
-(defun upwards (pathname)
-  (cond ((directory-p pathname)
+(defun upwards (pathname &optional (count 1))
+  (cond ((= count 0)
+         pathname)
+        ((directory-p pathname)
          (if (null (cdr (normalize-directory-spec (pathname-directory pathname))))
              (parent pathname)
-             (subdirectory (parent (parent pathname))
+             (subdirectory (parent pathname (1+ count))
                            (directory-name pathname))))
         (T
          (make-pathname :directory (pathname-directory
-                                    (parent (to-directory pathname)))
+                                    (parent (to-directory pathname) count))
                         :defaults pathname))))
 
-(defun downwards (pathname subdir)
+(defun downwards (pathname &rest subdirs)
   (cond ((directory-p pathname)
          (if (null (cdr (normalize-directory-spec (pathname-directory pathname))))
-             (subdirectory pathname
-                           subdir)
-             (subdirectory (parent pathname)
-                           subdir
-                           (directory-name pathname))))
+             (apply #'subdirectory pathname subdirs)
+             (apply #'subdirectory
+                    (parent pathname)
+                    (nconc subdirs
+                           (list (directory-name pathname))))))
         (T
-         (make-pathname :directory (pathname-directory (subdirectory pathname subdir))
+         (make-pathname :directory (pathname-directory (apply #'subdirectory pathname subdirs))
                         :defaults pathname))))
 
 (defun enough-pathname (subpath base)

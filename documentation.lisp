@@ -298,7 +298,7 @@ using DOWNWARDS instead.
 See TO-DIRECTORY")
   
   (pop-directory
-   "Pops the last component off the pathname-directory part.
+   "Pops the last component(s) off the pathname-directory part.
 
 The pathname is coerced using PATHNAME*.
 Note that this will probably not behave as expected for
@@ -327,7 +327,7 @@ See PATHNAME*
 See TO-DIRECTORY")
   
   (upwards
-   "Moves the topmost pathname component a level upwards.
+   "Moves the topmost pathname component one or more levels upwards.
 
 Specifically, if we have a file \"foo/bar/baz.jpg\", and move
 it upwards by one, the resulting pathname will be 
@@ -337,7 +337,7 @@ the last directory is moved upwards by one.
 See PARENT")
   
   (downwards
-   "Moves the topmost pathname component a level downwards.
+   "Moves the topmost pathname component one or more levels downwards.
 
 Specifically, if we have a file \"foo/bar.jpg\", and move it
 downwards by \"baz\", the resulting pathname will be
