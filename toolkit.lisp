@@ -113,13 +113,13 @@
 
 (defun logical-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (if (typep (pathname* pathname) 'logical-pathname)
+    (if (typep pathname 'logical-pathname)
         (values pathname pathname)
         (values NIL pathname))))
 
 (defun physical-p (pathname)
   (let ((pathname (pathname* pathname)))
-    (if (typep (pathname* pathname) '(and pathname (not logical-pathname)))
+    (if (typep pathname '(and pathname (not logical-pathname)))
         (values pathname pathname)
         (values NIL pathname))))
 
