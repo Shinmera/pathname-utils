@@ -7,13 +7,6 @@
 
 (define-test pathname-utils)
 
-(defmacro skip-on (impls explanation &body body)
-  `(,@(if (loop for impl in impls
-                thereis (find impl *features* :test #'string=))
-          (list 'skip explanation)
-          (list 'progn))
-    ,@body))
-
 (define-test normalization
   :parent pathname-utils)
 
@@ -45,7 +38,8 @@
   (is equal `(:relative ,*wild-inferiors-component*) (normalize-directory-spec *wild-inferiors-component*))
   (is equal '(:absolute) (normalize-directory-spec '(:absolute)))
   (is equal '(:relative) (normalize-directory-spec '(:relative)))
-  #-gcl (fail (normalize-directory-spec '(a)))
+  (skip-on (gcl) "GCL weirdness"
+    (fail (normalize-directory-spec '(a))))
   (is equal '(:relative :up "b") (normalize-directory-spec '(:relative :back "a" :back "b"))))
 
 (define-test normalize-pathname
@@ -120,8 +114,8 @@
   :depends-on (pathname*)
   (false (logical-p "/"))
   (false (logical-p "a"))
-  #+sbcl (true (logical-p (logical-pathname "SYS:SRC;")))
-  #-sbcl (skip "Cannot portably test logical pathnames as we cannot create them."))
+  (skip-on (not sbcl) "Cannot create logical pathnames portably."
+    (true (logical-p (logical-pathname "SYS:SRC;")))))
 
 (define-test physical-p
   :parent predicates
@@ -361,10 +355,9 @@
   (is pathname= #p"b/c" (relative-pathname #p"a/" #p"a/b/c"))
   (is pathname= #p"b/c/" (relative-pathname #p"a/" #p"a/b/c/"))
   (is pathname= (make-pathname :directory '(:relative :up "d")) (relative-pathname #p"/a/b/" #p"/a/d/"))
-  #+windows
-  (is pathname= #p"b/c/" (relative-pathname #p"a:/a/" #p"a:/a/b/c/"))
-  #+windows
-  (fail (relative-pathname #p"a:/a/" #p"b:/a/b/c/")))
+  (skip-on ((not windows)) "Windows device pathname tests"
+    (is pathname= #p"b/c/" (relative-pathname #p"a:/a/" #p"a:/a/b/c/"))
+    (fail (relative-pathname #p"a:/a/" #p"b:/a/b/c/"))))
 
 (define-test file-in
   :parent queries
@@ -439,8 +432,9 @@
   (is equal #p "a/b/c" (parse-dos-namestring "a/b/c"))
   (is equal #p "/a/b/c" (parse-dos-namestring "\\a\\b\\c"))
   (is equal #p "a/b/c" (parse-dos-namestring "a\\b\\c"))
-  #+windows (is equal #p"C:/a/b/c" (parse-dos-namestring "C:\\a\\b\\c"))
-  #+windows (is equal (user-homedir-pathname) (parse-dos-namestring "%UserProfile%/")))
+  (skip-on ((not windows)) "Windows specific path tests"
+    (is equal #p"C:/a/b/c" (parse-dos-namestring "C:\\a\\b\\c"))
+    (is equal (user-homedir-pathname) (parse-dos-namestring "%UserProfile%/"))))
 
 (define-test unix-namestring
   :parent namestrings
@@ -448,6 +442,7 @@
   (is equal "/" (unix-namestring #p"/"))
   (is equal "a" (unix-namestring #p"a"))
   (is equal "a.b" (unix-namestring (make-pathname :name "a" :type "b")))
+  (is equal "a.b.c" (unix-namestring (make-pathname :name "a.b" :type "c")))
   (is equal "/a/b" (unix-namestring (make-pathname :name "b" :directory '(:absolute "a"))))
   (is equal "a/b" (unix-namestring (make-pathname :name "b" :directory '(:relative "a"))))
   (is equal "" (unix-namestring (make-pathname :name :unspecific)))
