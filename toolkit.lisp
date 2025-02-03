@@ -261,6 +261,28 @@
                                       (list (file-namestring pathname)))
                    :name NIL :type NIL :version NIL :defaults pathname)))
 
+(defun destructure-file-name (file-name)
+  (let ((dot (position #\. file-name :from-end T)))
+    (if (and dot (< dot (1- (length file-name))))
+        (values (subseq file-name 0 dot) (subseq file-name (1+ dot)))
+        (values file-name NIL))))
+
+(defun force-file (pathname)
+  (let* ((pathname (pathname* pathname))
+         (dir (normalize-directory-spec (pathname-directory pathname))))
+    (cond ((or (pathname-name pathname) (pathname-type pathname))
+           pathname)
+          (T
+           (let ((last (car (last dir)))
+                 (rest (butlast dir)))
+             (unless rest
+               (error "Pathname does not have a directory entry:~%  ~s" pathname))
+             (unless (stringp last)
+               (error "Last pathname directory entry is not a name:~%  ~s" pathname))
+             (multiple-value-bind (name type) (destructure-file-name last)
+               (make-pathname :directory (unless (equal '(:relative) rest) rest)
+                              :name name :type type :defaults pathname)))))))
+
 (defun subdirectory (pathname &rest subdirs)
   (let* ((base (to-directory pathname))
          (basedir (or (pathname-directory base) '(:relative)))

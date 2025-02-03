@@ -272,6 +272,26 @@
   (is pathname= #p"/a/b" (to-absolute "/a/b"))
   (is pathname= #p"/" (to-absolute "")))
 
+(define-test force-directory
+  :parent coercion
+  :depends-on (pathname*)
+  (is pathname= #p"a/" (force-directory #p"a"))
+  (is pathname= #p"a/" (force-directory #p"a/"))
+  (is pathname= #p"a/b/" (force-directory #p"a/b"))
+  (is pathname= #p"/" (force-directory #p"/"))
+  (is pathname= #p"/a/" (force-directory #p"/a")))
+
+(define-test force-file
+  :parent coercion
+  :depends-on (pathname*)
+  (is pathname= #p"a" (force-file #p"a/"))
+  (is pathname= #p"a" (force-file #p"a"))
+  (is pathname= #p"a/b" (force-file #p"a/b/"))
+  (fail (force-file #p"/"))
+  (is pathname= #p"/a" (force-file #p"/a/"))
+  (is pathname= #p"a.b" (force-file #p"a.b/"))
+  (is pathname= #p"a.b.c" (force-file #p"a.b.c/")))
+
 (define-test operations
   :parent pathname-utils
   :depends-on (predicates))

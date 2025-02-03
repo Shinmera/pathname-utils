@@ -34,6 +34,7 @@
    #:to-relative
    #:to-absolute
    #:force-directory
+   #:force-file
    #:subdirectory
    #:pop-directory
    #:parent

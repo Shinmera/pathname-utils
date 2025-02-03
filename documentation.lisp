@@ -255,7 +255,8 @@ See FORCE-DIRECTORY")
 This means stripping the device, host, and directory components
 of the pathname. The given pathname is coerced using PATHNAME*
 
-See PATHNAME*")
+See PATHNAME*
+See FORCE-FILE")
 
   (to-relative
    "Turns the pathname into a relative pathname.
@@ -278,8 +279,27 @@ Meaning: #p\"a\" => #p\"a/\"
 
 The pathname is first coerced using PATHNAME*
 
+Often instead of doing this, what you will want is
+PARSE-NATIVE-NAMESTRING with the :AS :DIRECTORY option.
+
 See PATHNAME*
+See FORCE-FILE
 See TO-DIRECTORY")
+
+  (force-file
+   "Forces the pathname into a file if it isn't already.
+
+Meaning: #p\"a/\" => #p\"a\"
+
+The pathname is first coerced using PATHNAME*
+
+If the pathname cannot be coerced to a file, either because it is
+a root pathname or because its last directory component is not a
+string, an error is signalled.
+
+See PATHNAME*
+See FORCE-DIRECTORY
+See TO-FILE")
   
   (subdirectory
    "Returns a directory-pathname with the given subdirectories appended.
