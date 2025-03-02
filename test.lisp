@@ -416,7 +416,7 @@
   (is equal "c" (pathname-type (parse-unix-namestring "a.b.c")))
   (is equal #p "/a/b/c" (parse-unix-namestring "/a/b/c"))
   (is equal #p "a/b/c" (parse-unix-namestring "a/b/c"))
-  (is equal (make-pathname :directory '(:absolute :home)) (parse-unix-namestring "~/")))
+  (is equal (user-homedir-pathname) (parse-unix-namestring "~/")))
 
 (define-test parse-dos-namestring
   :parent namestrings

@@ -435,7 +435,7 @@
   (if (string= "" namestring)
       #p""
       (let ((base (case (char namestring 0)
-                    (#\~ '(:home :absolute))
+                    (#\~ (reverse (pathname-directory (user-homedir-pathname))))
                     (#\/ '(:absolute))
                     (T '(:relative))))
             (buf (make-string-output-stream))
