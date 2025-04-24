@@ -205,7 +205,7 @@
             while (and a b)
             finally (return (and (null a) (null b))))))
 
-(defun pathname-matches-p (pathname wild-pathname)
+(defun pathname-matches-p (pathname wild-pathname &key (ignore '(:version)))
   (flet ((test (part)
            (pathname-component-matches-p
             (funcall part pathname)
@@ -215,14 +215,14 @@
       (error "Cannot match a relative pathname to an absolute pattern or vice-versa."))
     (when (wild-pathname-p pathname)
       (error "The pathname cannot be wild itself."))
-    (and (test #'pathname-name)
-         (test #'pathname-type)
-         (test #'pathname-device)
-         (test #'pathname-host)
-         (test #'pathname-version)
-         (pathname-directory-matches-p
-          (pathname-directory pathname)
-          (pathname-directory wild-pathname)))))
+    (and (or (find :name ignore) (test #'pathname-name))
+         (or (find :type ignore) (test #'pathname-type))
+         (or (find :device ignore) (test #'pathname-device))
+         (or (find :host ignore) (test #'pathname-host))
+         (or (find :version ignore) (test #'pathname-version))
+         (or (find :directory ignore) (pathname-directory-matches-p
+                                       (pathname-directory pathname)
+                                       (pathname-directory wild-pathname))))))
 
 (defun to-root (pathname)
   (make-pathname :name NIL :type NIL :version NIL :directory '(:absolute) :defaults (pathname pathname)))

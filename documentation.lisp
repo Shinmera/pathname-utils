@@ -222,6 +222,8 @@ This properly handles wild fields and wild inferiors in the pattern.
 An unspecific component in the pattern is treated the same as a wild
 component. On SBCL it also handles pathname pattern components.
 
+IGNORE can be a set of pathname properties not to check.
+
 See PATHNAME-COMPONENT-MATCHES-P
 See PATHNAME=")
   
