@@ -4,9 +4,9 @@
   :author "Yukari Hafner <shinmera@tymoon.eu>"
   :maintainer "Yukari Hafner <shinmera@tymoon.eu>"
   :description "A collection of utilities for pathname manipulation."
-  :homepage "https://Shinmera.github.io/pathname-utils/"
-  :bug-tracker "https://github.com/Shinmera/pathname-utils/issues"
-  :source-control (:git "https://github.com/Shinmera/pathname-utils.git")
+  :homepage "https://shinmera.com/docs/pathname-utils/"
+  :bug-tracker "https://shinmera.com/project/pathname-utils/issues"
+  :source-control (:git "https://shinmera.com/project/pathname-utils.git")
   :serial T
   :components ((:file "package")
                (:file "toolkit")
