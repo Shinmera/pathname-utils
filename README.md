@@ -1,5 +1,4 @@
-## About Pathname-Utils
-This is a collection of common tests and operations to help handling pathnames. It does not actually deal in handling the accessing of files on the underlying system however.
+# This repository has [moved](https://shinmera.com/projects/pathname-utils)!
+Due to Microsoft's continued enshittification of the platform this repository has been moved to [Codeberg](https://shinmera.com/projects/pathname-utils) in August of 2025. It will not receive further updates or patches. **Issues and pull requests will not be looked at here either**, please submit your patches and issue tickets on Codeberg, or send them directly via good old email patches to [shirakumo@tymoon.eu](mailto:shirakumo@tymoon.eu).
 
-## How To
-Since this is a purely utility/toolkit library, simply having a look at the symbol index should give you the best idea of what is offered.
+Thanks.
